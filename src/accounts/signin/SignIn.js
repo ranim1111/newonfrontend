@@ -142,7 +142,16 @@ function SignIn() {
                     fontWeight: "bold",
                   }}
                 >
-                  <Link to="/ResetPassword">Forgot Your Password?</Link>
+                  <br />
+                  <Button
+                    component={Link}
+                    to={"/ResetPassword"}
+                    style={{ width: 220, marginLeft: -35 }}
+                    variant="outlined"
+                    color="success"
+                  >
+                    Forgot Your Password?
+                  </Button>
                 </div>
               </div>
             </Grid>

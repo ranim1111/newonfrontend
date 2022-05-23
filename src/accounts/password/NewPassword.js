@@ -127,9 +127,10 @@ const NewPassword = () => {
         </Container>
 
         <img
-          src="https://anhhung.mobi/phan-khuc-khach-hang-la-gi/imager_7_3416_700.jpg"
+          src="https://img.freepik.com/free-vector/key-concept-illustration_114360-6305.jpg?w=740&t=st=1653255390~exp=1653255990~hmac=4b428d4ff980f556029da56779b1de2ca7da1924c8dab9c37f03244df84b47c8"
+          //src="https://anhhung.mobi/phan-khuc-khach-hang-la-gi/imager_7_3416_700.jpg"
           alt=""
-          style={{ width: 900, height: 600, marginTop: -540, marginLeft: -10 }}
+          style={{ width: 800, height: 650, marginTop: -550, marginLeft: 10 }}
         />
       </div>
     </div>

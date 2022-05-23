@@ -23,6 +23,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import LayoutHome from "../layout/LayoutHome";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
 export default function Profil() {
   const [open, setOpen] = React.useState(false);
@@ -30,7 +31,6 @@ export default function Profil() {
   const [lastName, setLastName] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
   const [id, setId] = React.useState("");
   const [emailContent, setEmailContent] = React.useState("");
@@ -46,14 +46,13 @@ export default function Profil() {
         method: "get",
         url: `http://localhost:8080/user/profilInfo/${userId}`,
       });
-      const { _id, firstName, lastName, email, phoneNumber, password } =
-        response.data;
+      const { _id, firstName, lastName, email, phoneNumber } = response.data;
       setId(_id);
       setFirstName(firstName);
       setLastName(lastName);
       setPhoneNumber(phoneNumber);
       setEmail(email);
-      setPassword(password);
+
       setOpen(true);
     } catch (error) {
       console.log(error);
@@ -72,7 +71,7 @@ export default function Profil() {
           phoneNumber,
         },
       });
-      console.log("c bon");
+      //console.log("c bon");
 
       setLisUpdated(!listUpdated);
       const Toast = Swal.mixin({
@@ -179,18 +178,18 @@ export default function Profil() {
               noWrap
               style={{ color: "#026aa4", marginLeft: 60 }}
             >
-              Your profile
+              Edit Your Profile
             </Typography>
           </Toolbar>
         </AppBar>
-
+        <br />
         <Paper
           sx={{ padding: "2em 2em", boxShadow: 2 }}
-          style={{ marginTop: -40, height: 320 }}
+          style={{ marginTop: -40, height: 300 }}
         >
           <Box component="form" sx={{ mt: 5 }} onSubmit={handleUpdateUser}>
             <Grid container spacing={3}>
-              <Grid item xs={5} style={{ marginTop: -27 }}>
+              <Grid item xs={5} style={{ marginTop: -10 }}>
                 <Typography>First Name :</Typography>
                 <TextField
                   style={{ marginTop: -40, marginLeft: 120, width: 300 }}
@@ -253,31 +252,9 @@ export default function Profil() {
                 />
               </Grid>
 
-              <Grid item xs={20}>
-                <Typography>Password :</Typography>
-
-                <Tooltip title="The Password Should Be Composed Of At Least 5 characters">
-                  <InfoIcon style={{ marginTop: -30, marginLeft: 440 }} />
-                </Tooltip>
-
-                <TextField
-                  required
-                  style={{ marginTop: -50, marginLeft: -345, width: 300 }}
-                  //fullWidth
-                  name="password"
-                  //label="Password"
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Grid>
-              <Link to="/ResetPassword" style={{ marginLeft: 220 }}>
-                Forgot Your Password?
-              </Link>
               <Grid item sm={5}>
                 <Button
-                  style={{ marginTop: -85, marginLeft: 220, width: 170 }}
+                  style={{ marginTop: 10, marginLeft: -160, width: 200 }}
                   type="submit"
                   variant="contained"
                   //fullWidth
@@ -288,14 +265,14 @@ export default function Profil() {
               </Grid>
               <Grid item sm={5}>
                 <Button
-                  style={{ marginTop: -165, marginLeft: 800, width: 170 }}
-                  type="reset"
-                  variant="outlined"
-                  //fullWidth
+                  style={{ marginTop: -120, marginLeft: 550, width: 200 }}
+                  variant="contained"
+                  component={Link}
+                  to={"/ChangePassword"}
                   sx={{ mt: 2, mb: 2 }}
-                  onClick={handleClose}
+                  color="success"
                 >
-                  Cancel
+                  Change Password
                 </Button>
               </Grid>
             </Grid>
@@ -308,10 +285,27 @@ export default function Profil() {
               style={{ backgroundColor: "#e53935", borderColor: "#e53935" }}
             >
               <TableRow>
-                <TableCell
-                  style={{ fontWeight: "bold", color: "white", fontSize: 15 }}
-                >
-                  Delete Account
+                <TableCell>
+                  <div>
+                    <RemoveCircleIcon
+                      style={{
+                        fontWeight: "bold",
+                        color: "white",
+                        fontSize: 27,
+                      }}
+                    />
+                  </div>
+                  <Typography
+                    style={{
+                      fontWeight: "bold",
+                      color: "white",
+                      fontSize: 15,
+                      marginLeft: 40,
+                      marginTop: -30,
+                    }}
+                  >
+                    Delete Account
+                  </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -326,7 +320,7 @@ export default function Profil() {
                     style={{ marginTop: 10, marginLeft: -40 }}
                     onClick={handleDeleteUser}
                   >
-                    Delete Account
+                    Delete It Now
                   </Button>
                 </TableCell>
               </TableRow>

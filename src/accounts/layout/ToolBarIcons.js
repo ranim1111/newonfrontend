@@ -85,7 +85,7 @@ export default function Print() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting,index) => (
+                {settings.map((setting, index) => (
                   //<Stack spacing={2} direction="column">
                   <div>
                     <MenuItem key={index} onClick={handleCloseUserMenu}>

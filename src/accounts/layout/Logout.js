@@ -41,7 +41,9 @@ export default function Logout() {
     <React.Fragment>
       <Divider />
       <List>
-        <Tooltip title="Logout">
+        <Tooltip
+          title={<Typography style={{ fontSize: 15 }}>Logout</Typography>}
+        >
           <ListItem button onClick={HandleLogout}>
             <ListItemIcon>
               <LogoutIcon style={{ color: "black" }} />

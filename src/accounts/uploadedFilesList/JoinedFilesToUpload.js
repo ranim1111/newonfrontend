@@ -20,7 +20,7 @@ import {
   getUserJoinedFiles,
 } from "../../services/axios";
 
-export const UserFiles = () => {
+export const JoinedFilesToUpload = () => {
   //const componentRef = useRef()
   //useState
   const [files, setFiles] = useState([]);
@@ -38,7 +38,7 @@ export const UserFiles = () => {
   const [joinFileName, setJoinFileName] = useState("");
   const [joinedFiles, setJoinedFiles] = useState("");
   const [isDeletedJoinFiles, setIsDeletedJoinFiles] = useState(false);
-  const [joinedTab,setJoinedTab] = useState(true)
+  const [joinedTab, setJoinedTab] = useState(true);
 
   const lastItemRef = useRef(null);
 
@@ -112,11 +112,20 @@ export const UserFiles = () => {
         method: "get",
         url: `http://localhost:8080/uploads/files/joined/getbyid/${id}`,
       });
-      console.log(response)
-      setShowFile(response.data);
+      console.log(JSON.stringify(response.data[0]));
+      setShowFile(JSON.stringify(response.data[0]));
+      const headerKeys2 = Object.keys(Object.assign({}, ...response.data));
+      const transform = ConvertToCSV(response.data);
+      const headersString =
+        headerKeys2.reduce(
+          (previousHeader, currentHeader) =>
+            previousHeader + "," + currentHeader,
+          ""
+        ) + "\n";
+      const cleanedString = headersString.substring(1) + transform;
 
-      csvFileToArray(response.data);
-      fileReader.readAsText(response.data);
+      csvFileToArray(cleanedString.slice(0, -1));
+      // fileReader.readAsText(response.data[0]);
       // csvFileToArray(response.data.csvHeader)
     } else {
       setShowFile("");
@@ -215,7 +224,7 @@ export const UserFiles = () => {
     );
     if (response.success === true) {
       console.log(response.data.joinedResult);
-      if( response.data.joinedResult.length>0){
+      if (response.data.joinedResult.length > 0) {
         const headerKeys2 = Object.keys(
           Object.assign({}, ...response.data.joinedResult)
         );
@@ -224,35 +233,31 @@ export const UserFiles = () => {
         console.log(transform);
         setShowFile(response.data.joinedResult);
         setJoinFileName(response.data.originalFileName);
-  
+
         const headersString =
           headerKeys2.reduce(
             (previousHeader, currentHeader) =>
               previousHeader + "," + currentHeader,
             ""
           ) + "\n";
-        console.log(headersString);
+        console.log(transform);
         csvFileToArray(headersString.substring(1) + transform);
-        setJoinedTab(false)
-      }else{
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "bottom-right",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+        setJoinedTab(false);
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-right",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
 
-      Toast.fire({
-        icon: "error",
-        title: "can't join file .. please choose other attributs",
-      });
+        Toast.fire({
+          icon: "error",
+          title: "can't join file .. please choose other attributs",
+        });
       }
     }
-  
-   
-      
-      
   }
   async function handleFile2Options(e) {
     console.log(e.target.value);
@@ -264,120 +269,85 @@ export const UserFiles = () => {
         setHeaders2(getHeadersFromCsv(response.data));
       }
     }
-    }
+  }
 
   const headerKeys = Object.keys(Object.assign({}, ...array));
   console.log(array);
-const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={JoinedFiles}>show</button> : <button  className="buttonShow" onClick={()=>{
-  setJoinedTab(true);setShowFile("");setJoinFileName("")
-}}>Hide</button>
+  const showJoinedTab = joinedTab ? (
+    <button className="buttonShow" onClick={JoinedFiles}>
+      show
+    </button>
+  ) : (
+    <button
+      className="buttonShow"
+      onClick={() => {
+        setJoinedTab(true);
+        setShowFile("");
+        setJoinFileName("");
+      }}
+    >
+      Hide
+    </button>
+  );
   return (
     <>
-      <div className="userfilesall">
-        <div ref={lastItemRef}></div>
-        {files.length > 0 && (
-          <>
-            <h2 className="gradient">Your Files</h2>
-            <br />
-            <table className="tableofuploadedfiles">
-              <tr>
-                <th> Name</th>
-                <th>Show </th>
-                <th>Delete</th>
-              </tr>
-              {files.map((element, index) => {
-                //   <thead>
-                //   <tr key={"header"}>
-                //     {headerKeys2.map((key) => (
-                //       <th>{key}</th>
-                //     ))}
-                //   </tr>
-                // </thead>
-                return (
-                  <>
-                    <SingleFilePreview
-                      id={element._id}
-                      handleShow={handleShow}
-                      isDeleted={isDeleted}
-                      setIsDeleted={setIsDeleted}
-                    />
+      {joinedFiles.length > 0 && (
+        <>
+          <br />
+          <h2 className="gradient_Join">Your joined Files</h2>
+          <table className="tableofuploadedfiles">
+            <tr>
+              <th> Name</th>
+              <th>Show </th>
+              <th>Delete </th>
+              <th>Download as CSV File</th>
+            </tr>
+            {joinedFiles.map((element, index) => {
+              return (
+                <>
+                  <JoinedFilePreview
+                    id={element._id}
+                    handleShow={handleShow2}
+                    isDeleted={isDeletedJoinFiles}
+                    setIsDeleted={setIsDeletedJoinFiles}
+                  />
+                </>
+              );
+            })}
+          </table>
+        </>
+      )}
 
-                    {/* <button onClick={()=>handleShow(element.fileName)}>see file</button>   <button>*/}
-                  </>
-                );
-              })}
-            </table>
-            <br />
-            <br />
-            <hr />
-            <br />
-            <br />
-          </>
-        )}
+      {showFile && (
+        <table>
+          <thead>
+            <tr key={"header"}>
+              {headerKeys.map((key) => (
+                <th>{key}</th>
+              ))}
+            </tr>
+          </thead>
 
-        {joinedFiles.length > 0 && (
-          <>
-            <h2 className="gradient">Your joined Files</h2>
-            <br />
-            <table className="tableofuploadedfiles">
-              <tr>
-                <th> Name</th>
-                <th>Show </th>
-                <th>Delete </th>
-              </tr>
-              {joinedFiles.map((element, index) => {
-                return (
-                  <>
-                    {/* <ReactToPrint
-          trigger={() => <a href="#">Print this out!</a>}
-          content={() => componentRef.current}
-        /> */}
-
-                    <JoinedFilePreview
-                      id={element._id}
-                      handleShow={handleShow2}
-                      isDeleted={isDeletedJoinFiles}
-                      setIsDeleted={setIsDeletedJoinFiles}
-                    />
-
-                    {/* <button onClick={()=>handleShow(element.fileName)}>see file</button>   <button>*/}
-                  </>
-                );
-              })}
-            </table>
-          </>
-        )}
-
-        {showFile && (
-          <table>
-            <thead>
-              <tr key={"header"}>
-                {headerKeys.map((key) => (
-                  <th>{key}</th>
+          <tbody>
+            {array.map((item) => (
+              <tr key={item.id}>
+                {Object.values(item).map((val) => (
+                  <td>{val}</td>
                 ))}
               </tr>
-            </thead>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <br />
+      <br />
 
-            <tbody>
-              {array.map((item) => (
-                <tr key={item.id}>
-                  {Object.values(item).map((val) => (
-                    <td>{val}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        <br />
-        <br />
-        <hr />
-        <br />
-        <br />
-        <br />
-        <br />
+      <br />
+      <br />
+      <br />
+      <br />
 
-        <Button
+      {/* <Button
           className="Button"
           onClick={handleClick}
           style={{
@@ -388,7 +358,6 @@ const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={Joine
         >
           Want to join files..?
         </Button>
-
         <div>
           {show && (
             <>
@@ -430,12 +399,10 @@ const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={Joine
                   } else if (index === headers1.length - 1) {
                     subElt = subElt.substring(0, subElt.length - 2);
                   }
-
                   return <option value={element}>{element}</option>;
                 })}
               </select>
             )}
-
             {headers2.length > 0 && (
               <>
                 <select
@@ -455,7 +422,6 @@ const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={Joine
                 </select>
                 <div>
                  {showJoinedTab}
-
                   <CSVLink data={showFile} filename={joinFileName}>
                     <button className="download">
                       Download
@@ -490,17 +456,14 @@ const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={Joine
                           timer: 2000,
                           timerProgressBar: true,
                         });
-
                         Toast.fire({
                           icon: "success",
                           title: response.data,
                         });
-
                         setIsDeletedJoinFiles(!isDeletedJoinFiles);
                         done(false);
                       });
                       done(false);
-
                       // done(false);
                     }}
                   >
@@ -519,8 +482,7 @@ const showJoinedTab = joinedTab ? <button  className="buttonShow" onClick={Joine
           >
             <AiFillCaretUp />
           </button>
-        </footer>
-      </div>
+        </footer> */}
     </>
   );
 };

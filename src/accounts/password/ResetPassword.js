@@ -31,6 +31,7 @@ function ResetPassword() {
     })
       .then((res) => res.json())
       .then((data) => {
+        navigate("/");
         if (data.error) {
           // M.toast({ html: data.error, classes: "#c62828 red darken-3" });
           const Toast = Swal.mixin({
@@ -72,16 +73,23 @@ function ResetPassword() {
     <div className="containerreset">
       <div>
         <img
-          src="backg12.png "
+          src="forgot.png "
           alt=""
-          style={{ width: 900, height: 600, marginTop: 80, marginLeft: -1350 }}
+          style={{ width: 650, height: 500, marginTop: 60, marginLeft: -1100 }}
         />
       </div>
+      {/*<div>
+        <img
+          src="backg12.png "
+          alt=""
+          style={{ width: 900, height: 600, marginTop: 3, marginLeft: -1135 }}
+        />
+  </div>*/}
       <Container maxWidth="xs">
-        <div style={{ marginTop: -600, marginLeft: -1350 }}>
+        <div style={{ marginTop: -550, marginLeft: -1135 }}>
           <img src="Logo.png " className="logo" alt="" />
         </div>
-        <div style={{ marginTop: 50, marginLeft: -600 }}>
+        <div style={{ marginTop: 80, marginLeft: -600 }}>
           <Box
             sx={{
               //marginTop: -100,
@@ -91,7 +99,7 @@ function ResetPassword() {
               alignItems: "center",
             }}
           ></Box>
-          <div style={{ marginLeft: -170 }}>
+          <div style={{ marginLeft: 250 }}>
             <Typography className="typography1" variant="h4">
               Password Forgotten ?
             </Typography>
@@ -107,7 +115,7 @@ function ResetPassword() {
                   name="email"
                   required
                   //fullWidth
-                  style={{ width: 400, marginLeft: 100 }}
+                  style={{ width: 400, marginLeft: 320 }}
                   id="email"
                   label="Email"
                   type="email"
@@ -121,7 +129,7 @@ function ResetPassword() {
                   type="submit"
                   variant="contained"
                   fullWidth
-                  sx={{ mt: 2, mb: 5, width: 170, marginLeft: 10 }}
+                  sx={{ mt: 2, mb: 5, width: 170, marginLeft: 38 }}
                 >
                   Reset Password
                 </Button>
@@ -131,7 +139,7 @@ function ResetPassword() {
                   type="reset"
                   variant="outlined"
                   fullWidth
-                  sx={{ mt: 2, mb: 2, width: 170, marginLeft: -7 }}
+                  sx={{ mt: 2, mb: 2, width: 170, marginLeft: 22 }}
                 >
                   Cancel
                 </Button>

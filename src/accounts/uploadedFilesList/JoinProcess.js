@@ -1,14 +1,12 @@
 import React from "react";
 import LayoutHome from "../layout/LayoutHome";
+import { Join } from "../uploadedFilesList/Join";
 
-import { UserFiles } from "../uploadedFilesList/FilesToUpload";
-
-export default function UploadedFiles() {
+export default function JoinProcess() {
   return (
     <div>
       <LayoutHome />
-
-      <UserFiles />
+      <Join />
     </div>
   );
 }

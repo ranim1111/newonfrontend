@@ -8,6 +8,16 @@
     width: 90%;
     text-align: center;
     margin:auto;
+   
+  }
+  .tableofuploadedfiles{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+  
+    width: 60%;
+    text-align: center;
+    margin:auto;
+   
   }
   thead{
     background-color: rgba(35, 44, 129, 0.199);
@@ -41,10 +51,25 @@
     color: rgb(255, 255, 255);
   width: 90%;
   
-    
+    transform: translateY();
     margin:auto;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background: linear-gradient(to right, rgba(198, 204, 236, 0.918), rgba(11, 68, 143, 0.856));
+  }
+  .gradient_Join{
+    align-items: stretch;
+    margin: 1em 0;
+    height: 60px;
+    line-height: 2em;
+    text-align: center;
+    color: rgb(255, 255, 255);
+  width: 60%;
+  
+    transform: translateY();
+    margin:auto;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: linear-gradient(to right, rgba(198, 204, 236, 0.918), rgba(11, 68, 143, 0.856));
+
   }
   
   .userfilesall{
@@ -55,20 +80,26 @@
   .showeyes{
     border: none;
     background-color: transparent;
-  color: rgb(8, 17, 148);
+  color: #026aa4;
+  font-size: 24px;
+  }
+  .downloadcsv{
+    border: none;
+    background-color: transparent;
+  color: rgb(39, 126, 13);
   font-size: 20px;
   }
   
   .buttonpoubelle{
     border: none;
     background-color: transparent;
-  color: rgb(126, 13, 13);
-  font-size: 20px;}
+  color: rgb(199, 21, 21);
+  font-size: 24px;}
   
   .Upload{
   
     color: rgb(255, 255, 255);
-    background-color: rgb(55, 73, 236);
+    background-color: #026aa4;
     border-radius: 5px;
     border: none;
     font-size: 15px;
@@ -80,7 +111,7 @@
     -moz-transition: ease-out 0.4s;
     transition: ease-out 0.4s;
   
-    transform: translate(1400%,-200%);
+    transform: translate(800%,-200%);
   
   
   
@@ -90,7 +121,7 @@
   
   .eyebutton{  
     color: rgb(255, 255, 255);
-    background-color: rgb(55, 73, 236);
+    background-color: #026aa4;
     border-radius: 5px;
     border: none;
     font-size: 15px;
@@ -103,20 +134,20 @@
     transition: ease-out 0.4s;
    
     
-    transform: translate(1290%,-100%);
+    transform: translate(680%,-100%);
   
   
   
   }
   
   hr{
-    border: 1px solid rgba(171, 163, 219, 0.534);
+    border: 0.1pt solid rgba(199, 199, 199, 0.534);
   }
   .eyebutton:hover{  
-    box-shadow: inset 0 0 0 50px #100cdb;
+    box-shadow: inset 0 0 0 50px gray;
   }
   
-  .Upload:hover{  box-shadow: inset 0 0 0 50px #100cdb;}
+  .Upload:hover{  box-shadow: inset 0 0 0 50px gray;}
   .buttontexticon{
     font-size: 15px;
     font-weight: bold;
@@ -132,15 +163,9 @@
     font-size: 20px;
     transform: translate(5300%,1000%);
   }
-  .reference{
-    border: none;
-    background-color: transparent;
-    color: rgb(13, 21, 126);
-    font-size: 20px;
-    transform: translate(4020%,900%);
-  }
+
   .box{
-    transform: translate(25%,-30%);
+    transform: translate(33%,300%);
   }
   
   .box select {
@@ -154,8 +179,20 @@
     margin:10px;
     
   }
+  .selectoption{
+    transform: translate(33%,150%);
+  }
   
-  
+  .selectoption select{
+    background-color: #9d9d9eb6;
+    color: white;
+    padding: 5px;
+    width:200px;
+    border: none;
+    font-size: 15px;
+    border-radius: 5px;
+    margin:10px;
+  }
   
   .box:hover {
     
@@ -164,12 +201,15 @@
   
   .box select option {
     padding: 30px;
-    background-color:#9d9d9eb6;;
+    background-color:#9d9d9eb6;
+   
     
   }
+
+
   .buttonShow{
     color: rgb(255, 255, 255);
-    background-color: rgb(55, 73, 236);
+    background-color: #026aa4;
     border-radius: 5px;
     border: none;
     font-size: 14px;
@@ -183,7 +223,7 @@
     margin: 5px;
     transform: translate(90%);}
   .download{color: rgb(255, 255, 255);
-    background-color: rgb(55, 73, 236);
+    background-color: #026aa4;
     border-radius: 5px;
     border: none;
     font-size: 12px;
@@ -197,7 +237,7 @@
     transition: ease-out 0.4s;}
     .Buttonupload{
       color: rgb(255, 255, 255);
-    background-color: rgb(55, 73, 236);
+    background-color: #026aa4;
     border-radius: 5px;
     border: none;
     font-size: 14px;
@@ -212,6 +252,27 @@
     transform: translate(110%);
     }
   .Button{
-    transform: translate(180%,-130%);
+    transform: translate(300%,300%);
   }
+  .descr .profil{
+    transform: translate(8%,90%);
+    letter-spacing: 1px;
+    color: rgb(139, 139, 139);
+    font-size: 16px;
+  }
+  .profil{
+    transform: translate(10.8%,-90%);
+    letter-spacing: 1px;
+    color: rgb(110, 110, 110);
+    font-size: 16px;
+  }
+  .jointable{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
   
+    width: 60%;
+    text-align: center;
+    margin:auto;
+    transform: translateY(30%);
+    
+  }

@@ -1,3 +1,4 @@
+//importation
 import React from "react";
 import { DropzoneArea } from "material-ui-dropzone";
 import { useState } from "react";
@@ -7,14 +8,10 @@ import {
   AiFillEye,
   AiFillCaretUp,
 } from "react-icons/ai";
-import { GrDocumentCsv } from "react-icons/gr";
-import { FcUpload } from "react-icons/fc";
-
 import Swal from "sweetalert2";
 import { useRef } from "react";
-import { uploadSingleFiles } from "../../services/axios";
-import "../../styles/uploadedFiles.css";
-
+import { uploadSingleFiles } from "../services/axios";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 function FileUploader() {
   //useState()
   const [file, setFile] = useState([]);
@@ -47,23 +44,8 @@ function FileUploader() {
     setArray(array);
   };
 
-  function handleShow() {
-    if (file[0]) {
-      fileReader.onload = function (event) {
-        const text = event.target.result;
-        csvFileToArray(text);
-        console.log(file[0]);
-      };
-      console.log(file[0]);
-      fileReader.readAsText(file[0]);
-
-      setShow(true);
-    }
-  }
-
   //la fonction asynchrone handleUpload (en relation avec le back)
-  async function handleUpload(e) {
-    e.preventDefault();
+  async function handleUpload() {
     try {
       if (file[0]) {
         const formData = new FormData();
@@ -71,7 +53,7 @@ function FileUploader() {
 
         const response = await uploadSingleFiles(formData); //uploadSingleFiles se trouve dans le fichier Axios
         if (response.success === true) {
-          // setFile(response.data);
+          setFile(response.data);
           fileReader.onload = function (event) {
             const text = event.target.result;
             csvFileToArray(text);
@@ -81,20 +63,18 @@ function FileUploader() {
           //swal pour les alertes
           const Toast = Swal.mixin({
             toast: true,
-            position: "bottom-right",
+            position: "bottom-left",
             showConfirmButton: false,
-
+            timer: 2000,
             timerProgressBar: true,
-            timer: 7000,
           });
 
           Toast.fire({
             icon: "success",
-            title: `${response.data}, you can now check your files list`,
+            title: response.data,
           });
         }
       }
-      console.log(file[0]);
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +85,7 @@ function FileUploader() {
       <AiFillEyeInvisible /> <div className="buttontexticon">Hide</div>{" "}
     </button>
   ) : (
-    <button title="Show" className="eyebutton" onClick={handleShow}>
+    <button title="Show" className="eyebutton" onClick={() => setShow(true)}>
       <AiFillEye /> <div className="buttontexticon">Show</div>
     </button>
   );
@@ -113,15 +93,14 @@ function FileUploader() {
   const headerKeys = Object.keys(Object.assign({}, ...array));
 
   return (
-    <div className="drop">
+    <div ref={lastItemRef}>
       <DropzoneArea
         useChipsForPreview
-        Icon={FcUpload}
-        dropzoneText="Drag and drop a file here or Browse !"
-        previewText="Your selected File"
+        previewText="Selected files"
         showPreviews={true}
         showPreviewsInDropzone={false}
         filesLimit={1}
+        dropzoneText="Drag and drop a file or click here !"
         acceptedFiles={[
           ".csv, text/csv, application/csv, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values",
         ]}
@@ -140,7 +119,7 @@ function FileUploader() {
         </div>
       )}
 
-      {file.length > 0 && show && (
+      {show && (
         <table>
           <thead>
             <tr key={"header"}>
@@ -161,6 +140,16 @@ function FileUploader() {
           </tbody>
         </table>
       )}
+
+      <footer>
+        {" "}
+        <button
+          className="scrolltop"
+          onClick={() => lastItemRef.current.scrollIntoView()}
+        >
+          <AiFillCaretUp />
+        </button>
+      </footer>
     </div>
   );
 }
