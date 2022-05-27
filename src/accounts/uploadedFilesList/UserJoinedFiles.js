@@ -51,7 +51,7 @@ export default function UploadedSimpleFiles() {
             <VscChecklist
               style={{
                 fontSize: 30,
-                color: "#ffab91",
+                color: "#D2691E",
               }}
             />
           </div>

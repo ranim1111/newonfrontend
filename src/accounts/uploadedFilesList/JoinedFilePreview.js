@@ -155,7 +155,7 @@ function JoinedFilePreview({ id, handleShow, isDeleted, setIsDeleted }) {
 
         Toast.fire({
           icon: "error",
-          title: "can't join file .. please choose other attributs",
+          title: "Could not join files .. please choose other attributs",
         });
       }
     }

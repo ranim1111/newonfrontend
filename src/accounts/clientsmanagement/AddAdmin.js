@@ -235,7 +235,7 @@ export default function AddUser() {
                   sx={{ mt: 2, mb: 2 }}
                   startIcon={<AddCircleIcon />}
                 >
-                  Register
+                  Add Admin
                 </Button>
               </Grid>
               <Grid item sm={5}>

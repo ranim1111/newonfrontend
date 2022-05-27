@@ -177,6 +177,7 @@
     font-size: 15px;
     border-radius: 5px;
     margin:10px;
+  
     
   }
   .selectoption{
@@ -251,9 +252,9 @@
     margin: 5px;
     transform: translate(110%);
     }
-  .Button{
+  /*.Button{
     transform: translate(300%,300%);
-  }
+  }*/
   .descr .profil{
     transform: translate(8%,90%);
     letter-spacing: 1px;
@@ -273,6 +274,8 @@
     width: 60%;
     text-align: center;
     margin:auto;
-    transform: translateY(30%);
+    transform: translateY(40%);
+    
+    
     
   }

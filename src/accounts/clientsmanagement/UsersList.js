@@ -190,7 +190,7 @@ export default function UsersList() {
     try {
       const response = await axios({
         method: "put",
-        url: `http://localhost:8080/user/updateuser/62710752ffeb0a9a1cdd5b50`,
+        url: `http://localhost:8080/user/updateuser/627abe2c5a6be5db4943d47b`,
         data: {
           firstName,
           lastName,
@@ -367,7 +367,13 @@ export default function UsersList() {
               onChange={(e) => searchItems(e.target.value)}
             />
           </Grid>
-          <Tooltip title="Click Here If You Want To Add User Or Admin ">
+          <Tooltip
+            title={
+              <Typography style={{ fontsize: 13 }}>
+                Click here if you want to add simple user or admin
+              </Typography>
+            }
+          >
             <Button
               variant="outlined"
               onClick={handleClick2}

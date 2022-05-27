@@ -265,7 +265,7 @@ export default function DashboardHome() {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <List style={{ marginTop: 20 }}>
+          <List style={{ marginTop: 70 }}>
             <ListItem>
               <LooksOneIcon
                 style={{ marginTop: -70, fontSize: 30, color: "#026aa4" }}

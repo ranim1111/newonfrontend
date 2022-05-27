@@ -228,7 +228,7 @@ export default function Menu2() {
                         style={{
                           marginLeft: 8,
                           fontSize: 23,
-                          color: "#ffab91",
+                          color: "#D2691E",
                         }}
                       />
                       <Typography style={{ color: "black", marginLeft: 40 }}>

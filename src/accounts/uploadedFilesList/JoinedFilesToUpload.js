@@ -6,7 +6,6 @@ import SingleFilePreview from "./SingleFilePreview";
 import JoinedFilePreview from "./JoinedFilePreview";
 import { CSVLink } from "react-csv";
 
-import { Button } from "@material-ui/core";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { AiOutlineCloudDownload, AiFillCaretUp } from "react-icons/ai";

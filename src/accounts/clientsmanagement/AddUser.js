@@ -213,19 +213,19 @@ export default function AddUser() {
 
               <Grid item sm={5}>
                 <Button
-                  style={{ marginTop: -60, marginLeft: 600, width: 170 }}
+                  style={{ marginTop: -60, marginLeft: 600, width: 180 }}
                   type="submit"
                   variant="contained"
                   //fullWidth
                   sx={{ mt: 2, mb: 2 }}
                   startIcon={<AddCircleIcon />}
                 >
-                  Register
+                  Add Simple User
                 </Button>
               </Grid>
               <Grid item sm={5}>
                 <Button
-                  style={{ marginTop: -60, marginLeft: 350, width: 170 }}
+                  style={{ marginTop: -60, marginLeft: 350, width: 180 }}
                   type="reset"
                   variant="outlined"
                   //fullWidth

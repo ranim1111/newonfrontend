@@ -32,7 +32,7 @@ function SignIn() {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data}`;
-      navigate("/Dashboard");
+      navigate("/CsvUploader");
       const Toast = Swal.mixin({
         toast: true,
         position: "bottom-right",

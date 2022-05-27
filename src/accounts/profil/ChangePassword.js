@@ -23,24 +23,41 @@ import Swal from "sweetalert2";
 import LayoutHome from "../layout/LayoutHome";
 
 export default function ChangePassword() {
-  const [newPassword, setNewPassword] = React.useState(false);
+  const [cPassword, setCPassword] = React.useState("");
   const [password, setPassword] = React.useState("");
-  //const [oldpassword, setOldPassword] = React.useState("");
+  const [oldPassword, setOldPassword] = React.useState("");
 
-  const handleChangePass = async (e, userId) => {
+  const handleComparePass = async (e, userId) => {
     e.preventDefault();
     try {
       const response = await axios({
         method: "post",
         url: `http://localhost:8080/user/comparePassword/${userId}`,
         data: {
-          password: password,
+          password: oldPassword,
         },
       });
       //console.log("c bon");
 
       console.log(response.data);
-      setPassword("");
+      setOldPassword("");
+      if (password === cPassword) {
+        handleChangePassword(e, userId);
+        setCPassword("");
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-right",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        Toast.fire({
+          icon: "error",
+          title: "Oops...",
+          text: ` The new password and the re-entred one do not match, please check again. `,
+        });
+      }
     } catch (error) {
       console.log(error);
       const Toast = Swal.mixin({
@@ -56,6 +73,50 @@ export default function ChangePassword() {
         text: ` ${error.response.data} `,
       });
     }
+  };
+  const handleChangePassword = async (e, userId) => {
+    e.preventDefault();
+    try {
+      const response = await axios({
+        method: "post",
+        url: `http://localhost:8080/user/setNewPassword/${userId}`,
+        data: {
+          password: password,
+        },
+      });
+      //console.log("c bon");
+
+      console.log(response.data);
+      setPassword("");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-right",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Password Updated Successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-right",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Oops...",
+        text: ` ${error.response.data} `,
+      });
+    }
+  };
+  const handleOnSubmit = (e, userId) => {
+    handleComparePass(e, userId);
   };
   return (
     <div
@@ -95,78 +156,84 @@ export default function ChangePassword() {
           sx={{ padding: "2em 2em", boxShadow: 2 }}
           style={{ marginTop: -3 }}
         >
-          <Box component="form" sx={{ mt: 5 }} onSubmit={handleChangePass}>
+          <Box
+            component="form"
+            sx={{ mt: 5 }} //onSubmit={handleComparePass}
+            onSubmit={handleOnSubmit}
+          >
             <Grid container spacing={3}>
               <Grid item xs={20}>
-                <Typography style={{ marginLeft: 200 }}>
+                <Typography style={{ marginLeft: 100 }}>
                   Old password :
                 </Typography>
 
                 <TextField
                   required
-                  style={{ marginTop: -50, marginLeft: 450, width: 300 }}
+                  style={{ marginTop: -50, marginLeft: 350, width: 300 }}
                   //fullWidth
                   name="password"
                   //label="Password"
                   type="password"
                   id="password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                />
+              </Grid>
+              <br />
+              <Grid item xs={20}>
+                <Typography style={{ marginLeft: 100 }}>
+                  New Password :
+                </Typography>
+
+                <TextField
+                  required
+                  style={{ marginTop: -50, marginLeft: 350, width: 300 }}
+                  //fullWidth
+
+                  name="password"
+                  //label="Password"
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
               <br />
               <Grid item xs={20}>
-                <Typography style={{ marginLeft: 200 }}>
-                  New Password :
-                </Typography>
-
-                <TextField
-                  //required
-                  style={{ marginTop: -50, marginLeft: 450, width: 300 }}
-                  //fullWidth
-                  name="password"
-                  //label="Password"
-                  type="password"
-
-                  //value={passwordUser}
-                  //onChange={(e) => setPasswordUser(e.target.value)}
-                />
-              </Grid>
-              <br />
-              <Grid item xs={20}>
-                <Typography style={{ marginLeft: 200 }}>
+                <Typography style={{ marginLeft: 100 }}>
                   {" "}
                   Re-Enter New Password :
                 </Typography>
 
                 <TextField
-                  //required
-                  style={{ marginTop: -50, marginLeft: 450, width: 300 }}
+                  required
+                  style={{ marginTop: -50, marginLeft: 350, width: 300 }}
                   //fullWidth
                   name="password"
                   //label="Password"
                   type="password"
-
-                  //value={passwordUser}
-                  //onChange={(e) => setPasswordUser(e.target.value)}
+                  value={cPassword}
+                  onChange={(e) => setCPassword(e.target.value)}
                 />
               </Grid>
 
               <Grid item sm={5}>
                 <Button
-                  style={{ marginTop: 20, marginLeft: 500, width: 250 }}
+                  style={{ marginTop: 20, marginLeft: 440, width: 230 }}
                   type="submit"
                   variant="contained"
                   //fullWidth
                   sx={{ mt: 2, mb: 2 }}
                 >
-                  Change The Password
+                  Update and save
                 </Button>
               </Grid>
 
               <Grid item sm={5}>
                 <Button
+                  style={{ marginLeft: -220, marginTop: 20, width: 230 }}
                   component={Link}
+                  variant="contained"
+                  color="warning"
                   to={"/ResetPassword"}
                   //fullWidth
                   sx={{ mt: 2, mb: 2 }}
@@ -174,6 +241,10 @@ export default function ChangePassword() {
                   Forgot Your Password ?
                 </Button>
               </Grid>
+              <img
+                src="pass2.png"
+                style={{ marginTop: -280, height: 200, marginLeft: 850 }}
+              />
             </Grid>
           </Box>
         </Paper>

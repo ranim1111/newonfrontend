@@ -5,8 +5,13 @@ import React from "react";
 import SingleFilePreview from "./SingleFilePreview";
 import JoinedFilePreview from "./JoinedFilePreview";
 import { CSVLink } from "react-csv";
+import { FcComboChart } from "react-icons/fc";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
-import { Button } from "@material-ui/core";
+import { VscFiles } from "react-icons/vsc";
+import { Button, Typography } from "@material-ui/core";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { AiOutlineCloudDownload, AiFillCaretUp } from "react-icons/ai";
@@ -281,7 +286,54 @@ export const Join = () => {
   );
   return (
     <>
-      <div className="descr">
+      <div style={{ marginLeft: 100, marginTop: 30 }}>
+        <FcComboChart style={{ fontSize: 30 }} />
+        <Typography
+          variant="h6"
+          component="h4"
+          style={{ color: "grey", marginLeft: 37, marginTop: -35 }}
+        >
+          Data And Charts
+          <ArrowRightIcon
+            style={{
+              fontSize: 30,
+
+              marginBottom: -6.25,
+              color: "#026aa4",
+            }}
+          />{" "}
+          &nbsp;
+          <ArrowRightIcon
+            style={{
+              fontSize: 30,
+              marginLeft: 135,
+              marginBottom: -7,
+              color: "#026aa4",
+            }}
+          />
+          <div style={{ marginLeft: 170, marginTop: -32 }}>
+            &nbsp;
+            <UploadFileIcon
+              style={{
+                fontSize: 30,
+                color: "green",
+              }}
+            />
+          </div>
+          <div style={{ marginLeft: 350, marginTop: -40 }}>
+            &nbsp;
+            <VscFiles
+              style={{
+                fontSize: 30,
+                color: "#8bc34a",
+              }}
+            />
+          </div>
+          <div style={{ marginLeft: 210, marginTop: -39 }}>Upload Files</div>
+          <div style={{ marginLeft: 393, marginTop: -32 }}>Join Files</div>
+        </Typography>
+      </div>
+      {/*<div className="descr">
         This option is used to make a join between 2 files already found in your
         simple files list table.
         <div>
@@ -291,42 +343,21 @@ export const Join = () => {
         <div>
           The join can't be apply when the choice of the attributs is wrong ..!
         </div>
-      </div>
-      {showFile && (
-        <table className="jointable">
-          <thead>
-            <tr key={"header"}>
-              {headerKeys.map((key) => (
-                <th>{key}</th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {array.map((item) => (
-              <tr key={item.id}>
-                {Object.values(item).map((val) => (
-                  <td>{val}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
+      </div>*/}
       <Button
         className="Button"
         onClick={handleClick}
         style={{
-          backgroundColor: "#007FFF",
+          backgroundColor: "green",
           color: "#ffffff",
+          marginLeft: 520,
+          marginTop: 35,
         }}
         variant="contained"
       >
         Want to join files..?
       </Button>
-
-      <div>
+      <div style={{ marginTop: -100, marginLeft: 10 }}>
         {show && (
           <>
             <div className="box">
@@ -461,6 +492,30 @@ export const Join = () => {
           <AiFillCaretUp />
         </button>
       </footer>
+
+      {showFile && (
+        <React.Fragment>
+          <table className="jointable">
+            <thead>
+              <tr key={"header"}>
+                {headerKeys.map((key) => (
+                  <th>{key}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {array.map((item) => (
+                <tr key={item.id}>
+                  {Object.values(item).map((val) => (
+                    <td>{val}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </React.Fragment>
+      )}
     </>
   );
 };
