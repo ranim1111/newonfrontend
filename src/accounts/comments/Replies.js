@@ -24,13 +24,15 @@ export default function Replies() {
 
   const [repliesCollection, setRepliesCollection] = React.useState([]);
 
+  async function handleSubmit2(e, id) {}
+
   async function handleSubmit2(e, id) {
     e.preventDefault();
     try {
       await axios({
         //requete
         method: "POST",
-        url: `http://localhost:8080/reply/${id}/addreply`,
+        url: `http://localhost:8080/comments/${id}/addreply`,
         data: {
           //donnees de la requete
           text: text,
@@ -64,7 +66,7 @@ export default function Replies() {
   }
   React.useEffect(() => {
     axios
-      .get("http://localhost:8080/reply/replies")
+      .get("http://localhost:8080/comments/replies")
       .then((res) => {
         setRepliesCollection(res.data);
       })
@@ -72,6 +74,7 @@ export default function Replies() {
         console.log(error);
       });
   });
+
   //console.log(repliesCollection);
   return (
     <React.Fragment>

@@ -340,6 +340,9 @@ export default function WarningHome() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        <TableRow>
+                          <TableCell>test</TableCell>
+                        </TableRow>
                         {searchInput.length > 1
                           ? filteredResults.map((data, i) => {
                               return (

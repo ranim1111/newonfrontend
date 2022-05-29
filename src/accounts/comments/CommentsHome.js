@@ -11,6 +11,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ReplyIcon from "@mui/icons-material/Reply";
+import CommentIcon from "@mui/icons-material/Comment";
+import "./comment.css";
 import {
   Typography,
   Avatar,
@@ -18,6 +20,7 @@ import {
   TextField,
   Grid,
   Box,
+  List,
   AppBar,
   Toolbar,
   IconButton,
@@ -35,9 +38,12 @@ import {
   Dialog,
   DialogContent,
   Divider,
+  Slide,
+  Menu,
 } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
+
 import SearchIcon from "@mui/icons-material/Search";
 import InfoIcon from "@mui/icons-material/Info";
 import { BiEdit } from "react-icons/bi";
@@ -161,9 +167,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(13),
   },
 }));
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const CommentsHome = () => {
   const classes = useStyles();
+
   const [isUpdated, setIsUpdated] = React.useState(false);
   const [topic, setTopic] = React.useState("");
   const [content, setContent] = React.useState("");
@@ -174,7 +183,7 @@ const CommentsHome = () => {
   const [commentCollection, setCommentCollection] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [page, setPage] = React.useState(1);
-  const [createdAt, setCreatedAt] = React.useState(false);
+  const [createdAt, setCreatedAt] = React.useState("");
   const [filteredResults, setFilteredResults] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState("");
   const [choice, setChoice] = React.useState("");
@@ -186,43 +195,80 @@ const CommentsHome = () => {
   const [openReply, setOpenReply] = React.useState(false);
   const [isUpdated2, setIsUpdated2] = React.useState(false);
   const [text, setText] = React.useState("");
-  const [repliesCollection, setRepliesCollection] = React.useState([]);
+  const [openUserDial, setOpenUserDial] = React.useState(false);
+  const [openDateDial, setOpenDateDial] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openWeekDial, setOpenWeekDial] = React.useState(false);
+  const [openMonthDial, setOpenMonthDial] = React.useState(false);
+  const [openYearDial, setOpenYearDial] = React.useState(false);
+  const [openDayDial, setOpenDayDial] = React.useState(false);
+  const [open15DaysDial, setOpen15DaysDial] = React.useState(false);
 
-  async function handleSubmit2(e) {
-    e.preventDefault();
-    try {
-      await axios({
-        //requete
-        method: "POST",
-        url: "http://localhost:8080/reply/addreply",
-        data: {
-          //donnees de la requete
-          text: text,
-        },
-      });
-      setText("");
-      setIsUpdated2(!isUpdated2);
+  const handleClickOpenDateDial = (event) => {
+    setAnchorEl(event.currentTarget);
+    //setOpenDateDial(true);
+  };
 
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "bottom-right",
-        showConfirmButton: false,
-        timer: 1100,
-      });
+  const handleCloseDateDial = () => {
+    setAnchorEl(null);
+  };
+  const handleClickOpenDayDial = () => {
+    setOpenDayDial(true);
+  };
 
-      Toast.fire({
-        icon: "success",
-        title: "Reply Added Successfully !",
+  const handleCloseDayDial = () => {
+    setOpenDayDial(false);
+  };
+  const handleClickOpenWeekDial = () => {
+    setOpenWeekDial(true);
+  };
+
+  const handleCloseWeekDial = () => {
+    setOpenWeekDial(false);
+  };
+  const handleClickOpenMonthDial = () => {
+    setOpenMonthDial(true);
+  };
+
+  const handleCloseMonthDial = () => {
+    setOpenMonthDial(false);
+  };
+  const handleCloseYearDial = () => {
+    setOpenYearDial(false);
+  };
+  const handleClickOpenYearDial = () => {
+    setOpenYearDial(true);
+  };
+  const handleClose15DaysDial = () => {
+    setOpen15DaysDial(false);
+  };
+  const handleClickOpen15DaysDial = () => {
+    setOpen15DaysDial(true);
+  };
+
+  const handleClickOpenUserDial = () => {
+    setOpenUserDial(true);
+  };
+
+  const handleCloseUserDial = () => {
+    setOpenUserDial(false);
+  };
+
+  const getCommentByUser = async (userId) => {
+    axios
+      .get(`http://localhost:8080/comments/getCommentByUser/${userId}`)
+      .then((res) => {
+        setFilteredUsers(res.data.reverse());
+
+        //console.log(filteredUsers);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: ` ${error.response.data} `,
-      });
-    }
-  }
+  };
+
+  //console.log();
+
   const handleClick2 = () => {
     setOpen2(true);
   };
@@ -287,6 +333,9 @@ const CommentsHome = () => {
 
   const handleDeleteComment = (_id) => {
     Swal.fire({
+      customClass: {
+        container: "myswal",
+      },
       title: "Do You Realy Want To Delete This Comment ?",
       icon: "question",
       showCancelButton: true,
@@ -303,6 +352,7 @@ const CommentsHome = () => {
             // setCommentCollection([res.data]);
             //console.log("c bon deleted");
             setIsUpdated(!isUpdated);
+
             const Toast = Swal.mixin({
               toast: true,
               position: "bottom-right",
@@ -311,6 +361,9 @@ const CommentsHome = () => {
             });
 
             Toast.fire({
+              customClass: {
+                container: "myswal",
+              },
               icon: "success",
               title: "Comment Deleted Successfully !",
             });
@@ -325,6 +378,9 @@ const CommentsHome = () => {
             });
 
             Toast.fire({
+              customClass: {
+                container: "myswal",
+              },
               icon: "error",
               title: error.response.data,
             });
@@ -351,7 +407,7 @@ const CommentsHome = () => {
     try {
       const response = await axios({
         method: "put",
-        url: `http://localhost:8080/comments/updatecomment/:id`,
+        url: `http://localhost:8080/comments/updatecomment/${id}`,
         data: {
           topic: topic,
           content: content,
@@ -368,12 +424,18 @@ const CommentsHome = () => {
       });
 
       Toast.fire({
+        customClass: {
+          container: "myswal",
+        },
         icon: "success",
         title: "Comment Updated Successfully",
       });
     } catch (error) {
       console.log(error);
       Swal.fire({
+        customClass: {
+          container: "myswal",
+        },
         icon: "error",
         title: "Oops...",
         text: ` ${error.response.data} `,
@@ -385,31 +447,47 @@ const CommentsHome = () => {
       setIsUpdated(!isUpdated);
     }
   };
-  /*var seventhDay = new Date();
-  var seven = seventhDay.setDate(seventhDay.getDate() - 7);
-  //console.log("exp", seven);
-  var filter1 = commentCollection.filter((data, i) => {
+
+  ////////////////////////////////////////////// 1 week filter ///////////////////////////////////////
+  var seventhDay = new Date();
+  seventhDay.setDate(seventhDay.getDate() - 7);
+  var filter2 = commentCollection.filter((data, i) => {
     return new Date(data.createdAt).getTime() >= seventhDay.getTime();
   });
-  console.log("1 week", filter1);*/
+  //console.log(filter2, "1 week");
+  ////////////////////////////////////////////// 1 month filter ///////////////////////////////////////
 
-  //setFilteredResults(filter);
-  /////////////////////////////
-  var thirteenthDay = new Date();
-  thirteenthDay.setDate(thirteenthDay.getDate() - 30);
-  //console.log(thirteenthDay.setDate(thirteenthDay.getDate() - 7));
-  var filter2 = commentCollection.filter((data, i) => {
-    return new Date(data.createdAt).getTime() >= thirteenthDay.getTime();
-  });
-  //console.log(filter2, "1 month");
-  ///////////////////////////////
-  var lastDayInYear = new Date();
-  thirteenthDay.setDate(lastDayInYear.getDate() - 30);
-  //console.log(lastDayInYear.setDate(lastDayInYear.getDate() - 366));
+  var thirteenththDay = new Date();
+  thirteenththDay.setDate(thirteenththDay.getDate() - 30);
+
   var filter3 = commentCollection.filter((data, i) => {
+    return new Date(data.createdAt).getTime() >= thirteenththDay.getTime();
+  });
+  //console.log(filter3, "1 month");
+  ////////////////////////////////////////////// 1 year filter ///////////////////////////////////////
+  var lastDayInYear = new Date();
+  lastDayInYear.setDate(lastDayInYear.getDate() - 365);
+
+  var filter4 = commentCollection.filter((data, i) => {
     return new Date(data.createdAt).getTime() >= lastDayInYear.getTime();
   });
-  //console.log(filter3, "1 year");
+  //console.log(filter4, "1 year");
+  ////////////////////////////////////////////// 15 days filter ///////////////////////////////////////
+  var lastDayIn15 = new Date();
+  lastDayIn15.setDate(lastDayIn15.getDate() - 15);
+
+  var filter5 = commentCollection.filter((data, i) => {
+    return new Date(data.createdAt).getTime() >= lastDayIn15.getTime();
+  });
+
+  ////////////////////////////////////////////// 1 filter ///////////////////////////////////////
+  var lastDay = new Date();
+  lastDay.setDate(lastDay.getDate() - 1);
+
+  var filter6 = commentCollection.filter((data, i) => {
+    return new Date(data.createdAt).getTime() >= lastDay.getTime();
+  });
+
   /////////////////////////////////////////
 
   const searchItems = (searchValue) => {
@@ -429,35 +507,13 @@ const CommentsHome = () => {
       setFilteredResults(commentCollection);
     }
   };
-  const handleClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleChangeChoice = (event) => {
-    setChoice(event.target.value);
-  };
-  const handleSelectedValue = (event) => {
-    console.log(event.target.value);
-  };
-  const handleClickUser = () => {
-    setShow(!show);
-  };
-  const handleChangeUser = (searchInputUser) => {
-    setSearchUser(searchInputUser);
-    console.log(searchInputUser);
-    const filteredUsers = commentCollection.filter((data, i) => {
-      return Object.values(data, i)
-        .join("")
-        .toLowerCase()
-        .includes(searchInputUser.toLowerCase());
-    });
-    //console.log(filteredUsers);
-  };
 
   const handleClickReply = () => {
     setOpenReply(!openReply);
+  };
+  const handleTotalUser = (id) => {
+    getCommentByUser(id);
+    handleClickOpenUserDial();
   };
 
   return (
@@ -486,15 +542,12 @@ const CommentsHome = () => {
         </Toolbar>
       </AppBar>
       <Paper
-        //variant="outlined"
         sx={{
           padding: "2em 5em",
           marginLeft: 13.5,
-          //borderColor: "green",
+
           width: 1215,
         }}
-        //style={{ borderColor: "#026aa4" }}
-        //style={{ boxShadow: "red", color: "green", elevation: "24" }}
       >
         <div style={{ display: "flex" }}>
           <Avatar className={classes.large} style={{ color: "#026aa4" }} />
@@ -567,12 +620,11 @@ const CommentsHome = () => {
                   style={{
                     color: "#026aa4",
                     marginTop: 60,
-                    marginLeft: 255,
+                    marginLeft: 340,
                     fontSize: 35,
                   }}
                 />
                 <TextField
-                  //  inputRef={inputElem}
                   id="outlined-basic"
                   label="Search Comment "
                   variant="outlined"
@@ -580,7 +632,7 @@ const CommentsHome = () => {
                   style={{
                     marginLeft: 10,
                     marginTop: 50,
-                    width: 320,
+                    width: 350,
                     color: "#026aa4",
                   }}
                   onChange={(e) => searchItems(e.target.value)}
@@ -598,89 +650,1107 @@ const CommentsHome = () => {
                     style={{ color: "#026aa4", marginLeft: 5, marginBottom: 5 }}
                   />
                 </Tooltip>
-                <IconButton>
-                  <img
-                    src="filtericon3.webp"
-                    alt=""
-                    style={{ width: 33, marginTop: -20 }}
-                  />
-                </IconButton>
-                {/*<FilterListIcon
-                  style={{ marginLeft: 24, marginBottom: 5, color: "#026aa4" }}
-                />*/}
-                <FormControl
-                  variant="filled"
-                  sx={{ m: 1 }}
-                  style={{ marginLeft: 725, marginTop: -70, width: 180 }}
+                <Tooltip
+                  title={
+                    <Typography style={{ fontSize: 13 }}>
+                      Display my comments list
+                    </Typography>
+                  }
                 >
-                  <InputLabel htmlFor="grouped-native-select">
-                    Filter By date
-                  </InputLabel>
-                  <Select
-                    native
-                    defaultValue=""
-                    id="grouped-native-select"
-                    label="Filter Comments"
-                    onChange={handleSelectedValue}
-                  >
-                    <option label="None" value="None" />
-                    <option value={"perweek"}>Per Week</option>
-
-                    <optgroup label="Filter By Month">
-                      <option Button value={"january"}>
-                        January
-                      </option>
-                      <option Button value={"febuary"}>
-                        Febuary
-                      </option>
-                      <option Button value={"march"}>
-                        March
-                      </option>
-                    </optgroup>
-                    <optgroup label="Filter By Year">
-                      <option Button value={"2022"}>
-                        2022
-                      </option>
-                      <option Button value={"2021"}>
-                        2021
-                      </option>
-                    </optgroup>
-                  </Select>
-                </FormControl>
-                <Tooltip title="Filter By User">
-                  <IconButton onClick={handleClickUser}>
+                  <IconButton onClick={handleTotalUser}>
                     <img
                       src="filtericon.webp"
                       alt=""
-                      style={{ width: 33, marginLeft: -15, marginTop: -100 }}
+                      style={{ width: 35, marginTop: -25, marginLeft: 17 }}
                     />
                   </IconButton>
                 </Tooltip>
+                {/*//////////////////////////////////////Filter Date/////////////////////////////////////////////////////////////////*/}
+
+                <Tooltip
+                  title={
+                    <Typography style={{ fontSize: 13 }}>
+                      Filter comments by date
+                    </Typography>
+                  }
+                >
+                  <IconButton onClick={handleClickOpenDateDial}>
+                    <img
+                      src="filtericon3.webp"
+                      alt=""
+                      style={{ width: 35, marginTop: -20, marginLeft: 28 }}
+                    />
+                  </IconButton>
+                </Tooltip>
+
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseDateDial}
+                >
+                  <img
+                    src="1all.png"
+                    alt=""
+                    style={{ width: 45, marginLeft: 10 }}
+                  />
+                  &nbsp;&nbsp;
+                  <MenuItem
+                    style={{ fontSize: 20, marginTop: -35 }}
+                    onClick={handleClickOpenDayDial}
+                  >
+                    Last Day Comments
+                  </MenuItem>
+                  <br />
+                  <br />
+                  <img
+                    src="7.jpg"
+                    alt=""
+                    style={{ width: 45, marginLeft: 10 }}
+                  />
+                  &nbsp;&nbsp;
+                  <MenuItem
+                    style={{ fontSize: 20, marginTop: -35 }}
+                    onClick={handleClickOpenWeekDial}
+                  >
+                    Last Week Comments
+                  </MenuItem>
+                  &nbsp;
+                  <br />
+                  <br />
+                  <img
+                    src="15.jpg"
+                    alt=""
+                    style={{ width: 45, marginLeft: 10 }}
+                  />
+                  &nbsp;&nbsp;
+                  <MenuItem
+                    style={{ fontSize: 20, marginTop: -35 }}
+                    onClick={handleClickOpen15DaysDial}
+                  >
+                    Last 15 Days Comments
+                  </MenuItem>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <br />
+                  <br />
+                  <img
+                    src="1all.png"
+                    alt=""
+                    style={{ width: 45, marginLeft: 10 }}
+                  />
+                  &nbsp;&nbsp;
+                  <MenuItem
+                    style={{ fontSize: 20, marginTop: -35 }}
+                    onClick={handleClickOpenMonthDial}
+                  >
+                    Last Month Comments
+                  </MenuItem>
+                  &nbsp;
+                  <br />
+                  <br />
+                  <img
+                    src="1all.png"
+                    alt=""
+                    style={{ width: 45, marginLeft: 10 }}
+                  />
+                  &nbsp;&nbsp;
+                  <MenuItem
+                    style={{ fontSize: 20, marginTop: -35 }}
+                    onClick={handleClickOpenYearDial}
+                  >
+                    Last Year Comments
+                  </MenuItem>
+                  &nbsp;
+                  <br />
+                </Menu>
+                {/*//////////////////////////////////////Filter Date/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////Filter last day Dialog/////////////////////////////////////////////////////////////////*/}
+
+                <div>
+                  <Dialog
+                    fullScreen
+                    open={openDayDial}
+                    onClose={handleCloseDayDial}
+                    TransitionComponent={Transition}
+                  >
+                    <AppBar
+                      sx={{ position: "relative" }}
+                      style={{ backgroundColor: "gray" }}
+                    >
+                      <Toolbar>
+                        <img src="Logo.png" alt="" style={{ width: 160 }} />
+                        <CommentIcon
+                          style={{
+                            marginTop: 3,
+                            marginLeft: 330,
+                            fontSize: 27,
+                          }}
+                        />
+                        <Tooltip
+                          title={
+                            <Typography style={{ fontSize: 18 }}>
+                              The comments are sorted in descending order.
+                            </Typography>
+                          }
+                        >
+                          <Typography
+                            sx={{ ml: 2, flex: 1 }}
+                            style={{ marginLeft: 30, color: "#e0f2f1" }}
+                            variant="h5"
+                            component="div"
+                          >
+                            Last Day Comments List
+                          </Typography>
+                        </Tooltip>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleCloseDayDial}
+                          aria-label="close"
+                          style={{ marginLeft: 380 }}
+                        >
+                          <CloseIcon style={{ fontSize: 32 }} />
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    <img
+                      src="1day.png"
+                      alt=""
+                      style={{
+                        width: 190,
+                        marginTop: 100,
+                        marginLeft: 30,
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        marginLeft: 50,
+                        marginTop: 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filter6.length}
+                    </Typography>
+                    <List style={{ marginTop: -230 }}>
+                      {filter6.map((data, i) => {
+                        return (
+                          <div style={{ marginLeft: 220, marginTop: -35 }}>
+                            <Paper
+                              className={classes.paper}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                marginTop: 80,
+                                marginRight: 70,
+                              }}
+                            >
+                              <Grid key={i} className={classes.responses}>
+                                <ListItem fullwidth>
+                                  <div
+                                    style={{ marginLeft: -30, fontSize: 40 }}
+                                  >
+                                    <Avatar style={{ color: "#026aa4" }} />
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <ListItemText
+                                    primary={
+                                      <Typography
+                                        style={{ fontWeight: "bold" }}
+                                      >
+                                        {data?.userId?.firstName} &nbsp;
+                                        {data?.userId?.lastName}
+                                      </Typography>
+                                    }
+                                    secondary={
+                                      <Typography
+                                        variant="body2"
+                                        color="textPrimary"
+                                      >
+                                        Topic : {data.topic} <br />
+                                        Content : {data.content}
+                                      </Typography>
+                                    }
+                                  />
+                                  <Typography>
+                                    <AccessTimeIcon
+                                      style={{
+                                        width: 20,
+                                        marginTop: -25,
+                                        color: "#026aa4",
+                                        marginLeft: 13,
+                                      }}
+                                    />
+                                    <h6>
+                                      <div
+                                        style={{
+                                          marginLeft: 50,
+                                          marginTop: -25,
+                                        }}
+                                      >
+                                        {moment(data.createdAt).format(
+                                          "MMMM D, Y, HH:mm"
+                                        )}
+                                      </div>
+                                    </h6>
+                                  </Typography>
+                                  <Button
+                                    icon
+                                    className={classes.Delete}
+                                    onClick={(e) =>
+                                      handleDeleteComment(
+                                        data._id
+                                      ).setFilteredUsers(data, i)
+                                    }
+                                  >
+                                    <DeleteIcon style={{ color: "#026aa4" }} />
+                                  </Button>
+                                  <Button
+                                    icon
+                                    //className={classes.Delete}
+                                    //onClick={
+                                    onClick={() => handleClickOpen(data._id)}
+                                  >
+                                    <BiEdit
+                                      style={{
+                                        color: "#026aa4",
+                                        marginLeft: -220,
+                                        fontSize: 24,
+                                      }}
+                                    />
+                                  </Button>
+                                </ListItem>
+                              </Grid>
+                            </Paper>
+                          </div>
+                        );
+                      })}
+                    </List>
+                    <br />
+                  </Dialog>
+                </div>
+                {/*//////////////////////////////////////Filter last day Dialog/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////Filter Per Week Dialog/////////////////////////////////////////////////////////////////*/}
+
+                <div>
+                  <Dialog
+                    fullScreen
+                    open={openWeekDial}
+                    onClose={handleCloseWeekDial}
+                    TransitionComponent={Transition}
+                  >
+                    <AppBar
+                      sx={{ position: "relative" }}
+                      style={{ backgroundColor: "gray" }}
+                    >
+                      <Toolbar>
+                        <img src="Logo.png" alt="" style={{ width: 160 }} />
+                        <CommentIcon
+                          style={{
+                            marginTop: 3,
+                            marginLeft: 330,
+                            fontSize: 27,
+                          }}
+                        />
+                        <Tooltip
+                          title={
+                            <Typography style={{ fontSize: 18 }}>
+                              The comments are sorted in descending order.
+                            </Typography>
+                          }
+                        >
+                          <Typography
+                            sx={{ ml: 2, flex: 1 }}
+                            style={{ marginLeft: 30, color: "#e0f2f1" }}
+                            variant="h5"
+                            component="div"
+                          >
+                            Last Week Comments List
+                          </Typography>
+                        </Tooltip>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleCloseWeekDial}
+                          aria-label="close"
+                          style={{ marginLeft: 380 }}
+                        >
+                          <CloseIcon style={{ fontSize: 32 }} />
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    <img
+                      src="7days.jpg"
+                      alt=""
+                      style={{
+                        width: 190,
+                        marginTop: 100,
+                        marginLeft: 30,
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        marginLeft: 50,
+                        marginTop: 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filter2.length}
+                    </Typography>
+                    <List style={{ marginTop: -230 }}>
+                      {filter2.map((data, i) => {
+                        return (
+                          <div style={{ marginLeft: 220, marginTop: -35 }}>
+                            <Paper
+                              className={classes.paper}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                marginTop: 80,
+                                marginRight: 70,
+                              }}
+                            >
+                              <Grid key={i} className={classes.responses}>
+                                <ListItem fullwidth>
+                                  <div
+                                    style={{ marginLeft: -30, fontSize: 40 }}
+                                  >
+                                    <Avatar style={{ color: "#026aa4" }} />
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <ListItemText
+                                    primary={
+                                      <Typography
+                                        style={{ fontWeight: "bold" }}
+                                      >
+                                        {data?.userId?.firstName} &nbsp;
+                                        {data?.userId?.lastName}
+                                      </Typography>
+                                    }
+                                    secondary={
+                                      <Typography
+                                        variant="body2"
+                                        color="textPrimary"
+                                      >
+                                        Topic : {data.topic} <br />
+                                        Content : {data.content}
+                                      </Typography>
+                                    }
+                                  />
+                                  <Typography>
+                                    <AccessTimeIcon
+                                      style={{
+                                        width: 20,
+                                        marginTop: -25,
+                                        color: "#026aa4",
+                                        marginLeft: 13,
+                                      }}
+                                    />
+                                    <h6>
+                                      <div
+                                        style={{
+                                          marginLeft: 50,
+                                          marginTop: -25,
+                                        }}
+                                      >
+                                        {moment(data.createdAt).format(
+                                          "MMMM D, Y, HH:mm"
+                                        )}
+                                      </div>
+                                    </h6>
+                                  </Typography>
+                                  <Button
+                                    icon
+                                    className={classes.Delete}
+                                    onClick={(e) =>
+                                      handleDeleteComment(
+                                        data._id
+                                      ).setFilteredUsers(data, i)
+                                    }
+                                  >
+                                    <DeleteIcon style={{ color: "#026aa4" }} />
+                                  </Button>
+                                  <Button
+                                    icon
+                                    //className={classes.Delete}
+                                    //onClick={
+                                    onClick={() => handleClickOpen(data._id)}
+                                  >
+                                    <BiEdit
+                                      style={{
+                                        color: "#026aa4",
+                                        marginLeft: -220,
+                                        fontSize: 24,
+                                      }}
+                                    />
+                                  </Button>
+                                </ListItem>
+                              </Grid>
+                            </Paper>
+                          </div>
+                        );
+                      })}
+                    </List>
+                    <br />
+                  </Dialog>
+                </div>
+                {/*//////////////////////////////////////Filter Per Week Dialog/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////Filter Per Month Dialog/////////////////////////////////////////////////////////////////*/}
+
+                <div>
+                  <Dialog
+                    fullScreen
+                    open={openMonthDial}
+                    onClose={handleCloseMonthDial}
+                    TransitionComponent={Transition}
+                  >
+                    <AppBar
+                      sx={{ position: "relative" }}
+                      style={{ backgroundColor: "gray" }}
+                    >
+                      <Toolbar>
+                        <img src="Logo.png" alt="" style={{ width: 160 }} />
+                        <CommentIcon
+                          style={{
+                            marginTop: 3,
+                            marginLeft: 330,
+                            fontSize: 27,
+                          }}
+                        />
+                        <Tooltip
+                          title={
+                            <Typography style={{ fontSize: 18 }}>
+                              The comments are sorted in descending order.
+                            </Typography>
+                          }
+                        >
+                          <Typography
+                            sx={{ ml: 2, flex: 1 }}
+                            style={{ marginLeft: 30, color: "#e0f2f1" }}
+                            variant="h5"
+                            component="div"
+                          >
+                            Last Month Comments List
+                          </Typography>
+                        </Tooltip>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleCloseMonthDial}
+                          aria-label="close"
+                          style={{ marginLeft: 380 }}
+                        >
+                          <CloseIcon style={{ fontSize: 32 }} />
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    <img
+                      src="1month.png"
+                      alt=""
+                      style={{
+                        width: 190,
+                        marginTop: 100,
+                        marginLeft: 30,
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        marginLeft: 50,
+                        marginTop: 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filter3.length}
+                    </Typography>
+                    <List style={{ marginTop: -230 }}>
+                      {filter3.map((data, i) => {
+                        return (
+                          <div style={{ marginLeft: 220, marginTop: -35 }}>
+                            <Paper
+                              className={classes.paper}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                marginTop: 80,
+                                marginRight: 70,
+                              }}
+                            >
+                              <Grid key={i} className={classes.responses}>
+                                <ListItem fullwidth>
+                                  <div
+                                    style={{ marginLeft: -30, fontSize: 40 }}
+                                  >
+                                    <Avatar style={{ color: "#026aa4" }} />
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <ListItemText
+                                    primary={
+                                      <Typography
+                                        style={{ fontWeight: "bold" }}
+                                      >
+                                        {data?.userId?.firstName} &nbsp;
+                                        {data?.userId?.lastName}
+                                      </Typography>
+                                    }
+                                    secondary={
+                                      <Typography
+                                        variant="body2"
+                                        color="textPrimary"
+                                      >
+                                        Topic : {data.topic} <br />
+                                        Content : {data.content}
+                                      </Typography>
+                                    }
+                                  />
+                                  <Typography>
+                                    <AccessTimeIcon
+                                      style={{
+                                        width: 20,
+                                        marginTop: -25,
+                                        color: "#026aa4",
+                                        marginLeft: 13,
+                                      }}
+                                    />
+                                    <h6>
+                                      <div
+                                        style={{
+                                          marginLeft: 50,
+                                          marginTop: -25,
+                                        }}
+                                      >
+                                        {moment(data.createdAt).format(
+                                          "MMMM D, Y, HH:mm"
+                                        )}
+                                      </div>
+                                    </h6>
+                                  </Typography>
+                                  <Button
+                                    icon
+                                    className={classes.Delete}
+                                    onClick={(e) =>
+                                      handleDeleteComment(
+                                        data._id
+                                      ).setFilteredUsers(data, i)
+                                    }
+                                  >
+                                    <DeleteIcon style={{ color: "#026aa4" }} />
+                                  </Button>
+                                  <Button
+                                    icon
+                                    //className={classes.Delete}
+                                    //onClick={
+                                    onClick={() => handleClickOpen(data._id)}
+                                  >
+                                    <BiEdit
+                                      style={{
+                                        color: "#026aa4",
+                                        marginLeft: -220,
+                                        fontSize: 24,
+                                      }}
+                                    />
+                                  </Button>
+                                </ListItem>
+                              </Grid>
+                            </Paper>
+                          </div>
+                        );
+                      })}
+                    </List>
+                    <br />
+                  </Dialog>
+                </div>
+                {/*//////////////////////////////////////Filter Per Month Dialog/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////Filter Per Year Dialog/////////////////////////////////////////////////////////////////*/}
+
+                <div>
+                  <Dialog
+                    fullScreen
+                    open={openYearDial}
+                    onClose={handleCloseYearDial}
+                    TransitionComponent={Transition}
+                  >
+                    <AppBar
+                      sx={{ position: "relative" }}
+                      style={{ backgroundColor: "gray" }}
+                    >
+                      <Toolbar>
+                        <img src="Logo.png" alt="" style={{ width: 160 }} />
+                        <CommentIcon
+                          style={{
+                            marginTop: 3,
+                            marginLeft: 330,
+                            fontSize: 27,
+                          }}
+                        />
+                        <Tooltip
+                          title={
+                            <Typography style={{ fontSize: 18 }}>
+                              The comments are sorted in descending order.
+                            </Typography>
+                          }
+                        >
+                          <Typography
+                            sx={{ ml: 2, flex: 1 }}
+                            style={{ marginLeft: 30, color: "#e0f2f1" }}
+                            variant="h5"
+                            component="div"
+                          >
+                            Last Year Comments List
+                          </Typography>
+                        </Tooltip>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleCloseYearDial}
+                          aria-label="close"
+                          style={{ marginLeft: 380 }}
+                        >
+                          <CloseIcon style={{ fontSize: 32 }} />
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    <img
+                      src="1year.jpg"
+                      alt=""
+                      style={{
+                        width: 190,
+                        marginTop: 100,
+                        marginLeft: 30,
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        marginLeft: 50,
+                        marginTop: 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filter4.length}
+                    </Typography>
+                    <List style={{ marginTop: -230 }}>
+                      {filter4.map((data, i) => {
+                        return (
+                          <div style={{ marginLeft: 220, marginTop: -35 }}>
+                            <Paper
+                              className={classes.paper}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                marginTop: 80,
+                                marginRight: 70,
+                              }}
+                            >
+                              <Grid key={i} className={classes.responses}>
+                                <ListItem fullwidth>
+                                  <div
+                                    style={{ marginLeft: -30, fontSize: 40 }}
+                                  >
+                                    <Avatar style={{ color: "#026aa4" }} />
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <ListItemText
+                                    primary={
+                                      <Typography
+                                        style={{ fontWeight: "bold" }}
+                                      >
+                                        {data?.userId?.firstName} &nbsp;
+                                        {data?.userId?.lastName}
+                                      </Typography>
+                                    }
+                                    secondary={
+                                      <Typography
+                                        variant="body2"
+                                        color="textPrimary"
+                                      >
+                                        Topic : {data.topic} <br />
+                                        Content : {data.content}
+                                      </Typography>
+                                    }
+                                  />
+                                  <Typography>
+                                    <AccessTimeIcon
+                                      style={{
+                                        width: 20,
+                                        marginTop: -25,
+                                        color: "#026aa4",
+                                        marginLeft: 13,
+                                      }}
+                                    />
+                                    <h6>
+                                      <div
+                                        style={{
+                                          marginLeft: 50,
+                                          marginTop: -25,
+                                        }}
+                                      >
+                                        {moment(data.createdAt).format(
+                                          "MMMM D, Y, HH:mm"
+                                        )}
+                                      </div>
+                                    </h6>
+                                  </Typography>
+                                  <Button
+                                    icon
+                                    className={classes.Delete}
+                                    onClick={(e) =>
+                                      handleDeleteComment(
+                                        data._id
+                                      ).setFilteredUsers(data, i)
+                                    }
+                                  >
+                                    <DeleteIcon style={{ color: "#026aa4" }} />
+                                  </Button>
+                                  <Button
+                                    icon
+                                    //className={classes.Delete}
+                                    //onClick={
+                                    onClick={() => handleClickOpen(data._id)}
+                                  >
+                                    <BiEdit
+                                      style={{
+                                        color: "#026aa4",
+                                        marginLeft: -220,
+                                        fontSize: 24,
+                                      }}
+                                    />
+                                  </Button>
+                                </ListItem>
+                              </Grid>
+                            </Paper>
+                          </div>
+                        );
+                      })}
+                    </List>
+                    <br />
+                  </Dialog>
+                </div>
+                {/*//////////////////////////////////////Filter Per Year Dialog/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////Filter Per 10 days Dialog/////////////////////////////////////////////////////////////////*/}
+
+                <div>
+                  <Dialog
+                    fullScreen
+                    open={open15DaysDial}
+                    onClose={handleClose15DaysDial}
+                    TransitionComponent={Transition}
+                  >
+                    <AppBar
+                      sx={{ position: "relative" }}
+                      style={{ backgroundColor: "gray" }}
+                    >
+                      <Toolbar>
+                        <img src="Logo.png" alt="" style={{ width: 160 }} />
+                        <CommentIcon
+                          style={{
+                            marginTop: 3,
+                            marginLeft: 330,
+                            fontSize: 27,
+                          }}
+                        />
+                        <Tooltip
+                          title={
+                            <Typography style={{ fontSize: 18 }}>
+                              The comments are sorted in descending order.
+                            </Typography>
+                          }
+                        >
+                          <Typography
+                            sx={{ ml: 2, flex: 1 }}
+                            style={{ marginLeft: 30, color: "#e0f2f1" }}
+                            variant="h5"
+                            component="div"
+                          >
+                            Last 15 Days Comments List
+                          </Typography>
+                        </Tooltip>
+                        <IconButton
+                          edge="start"
+                          color="inherit"
+                          onClick={handleClose15DaysDial}
+                          aria-label="close"
+                          style={{ marginLeft: 380 }}
+                        >
+                          <CloseIcon style={{ fontSize: 32 }} />
+                        </IconButton>
+                      </Toolbar>
+                    </AppBar>
+                    <img
+                      src="15days.jpg"
+                      alt=""
+                      style={{
+                        width: 190,
+                        marginTop: 100,
+                        marginLeft: 30,
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        marginLeft: 50,
+                        marginTop: 20,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filter5.length}
+                    </Typography>
+                    <List style={{ marginTop: -230 }}>
+                      {filter5.map((data, i) => {
+                        return (
+                          <div style={{ marginLeft: 220, marginTop: -35 }}>
+                            <Paper
+                              className={classes.paper}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                marginTop: 80,
+                                marginRight: 70,
+                              }}
+                            >
+                              <Grid key={i} className={classes.responses}>
+                                <ListItem fullwidth>
+                                  <div
+                                    style={{ marginLeft: -30, fontSize: 40 }}
+                                  >
+                                    <Avatar style={{ color: "#026aa4" }} />
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                  <ListItemText
+                                    primary={
+                                      <Typography
+                                        style={{ fontWeight: "bold" }}
+                                      >
+                                        {data?.userId?.firstName} &nbsp;
+                                        {data?.userId?.lastName}
+                                      </Typography>
+                                    }
+                                    secondary={
+                                      <Typography
+                                        variant="body2"
+                                        color="textPrimary"
+                                      >
+                                        Topic : {data.topic} <br />
+                                        Content : {data.content}
+                                      </Typography>
+                                    }
+                                  />
+                                  <Typography>
+                                    <AccessTimeIcon
+                                      style={{
+                                        width: 20,
+                                        marginTop: -25,
+                                        color: "#026aa4",
+                                        marginLeft: 13,
+                                      }}
+                                    />
+                                    <h6>
+                                      <div
+                                        style={{
+                                          marginLeft: 50,
+                                          marginTop: -25,
+                                        }}
+                                      >
+                                        {moment(data.createdAt).format(
+                                          "MMMM D, Y, HH:mm"
+                                        )}
+                                      </div>
+                                    </h6>
+                                  </Typography>
+                                  <Button
+                                    icon
+                                    className={classes.Delete}
+                                    onClick={(e) =>
+                                      handleDeleteComment(
+                                        data._id
+                                      ).setFilteredUsers(data, i)
+                                    }
+                                  >
+                                    <DeleteIcon style={{ color: "#026aa4" }} />
+                                  </Button>
+                                  <Button
+                                    icon
+                                    //className={classes.Delete}
+                                    //onClick={
+                                    onClick={() => handleClickOpen(data._id)}
+                                  >
+                                    <BiEdit
+                                      style={{
+                                        color: "#026aa4",
+                                        marginLeft: -220,
+                                        fontSize: 24,
+                                      }}
+                                    />
+                                  </Button>
+                                </ListItem>
+                              </Grid>
+                            </Paper>
+                          </div>
+                        );
+                      })}
+                    </List>
+                    <br />
+                  </Dialog>
+                </div>
+                {/*//////////////////////////////////////Filter Per 10 days Dialog/////////////////////////////////////////////////////////////////*/}
+                {/*////////////////////////////////////// End Filter Date/////////////////////////////////////////////////////////////////*/}
+
+                {/*//////////////////////////////////////total comments/////////////////////////////////////////////////////////////////*/}
+
                 <Typography
                   style={{
-                    marginTop: -85,
-                    marginLeft: 85,
+                    marginTop: -57,
+                    marginLeft: 130,
                     fontWeight: "bold",
                   }}
                 >
                   Total Comments : {commentCollection.length}
                 </Typography>
-
-                {/*<input
-                  value={filterParam}
-                  onChange={(e) => setFilterParam(e.target.value)}
-                ></input>*/}
+                {/*//////////////////////////////////////total comments end/////////////////////////////////////////////////////////////////*/}
               </div>
-              <div></div>
+
               <br />
-              {show ? (
-                <TextField
-                  label="User's Name"
-                  style={{ marginLeft: 960, marginTop: -50, width: 150 }}
-                  onChange={(e) => handleChangeUser(e.target.value)}
-                />
-              ) : null}
-              <br />
+              <div>
+                <Dialog
+                  fullScreen
+                  open={openUserDial}
+                  onClose={handleCloseUserDial}
+                  TransitionComponent={Transition}
+                >
+                  <AppBar
+                    sx={{ position: "relative" }}
+                    style={{ backgroundColor: "gray" }}
+                  >
+                    <Toolbar>
+                      <img src="Logo.png" alt="" style={{ width: 160 }} />
+                      <CommentIcon
+                        style={{ marginTop: 3, marginLeft: 370, fontSize: 27 }}
+                      />
+                      <Tooltip
+                        title={
+                          <Typography style={{ fontSize: 18 }}>
+                            The comments are sorted in descending order.
+                          </Typography>
+                        }
+                      >
+                        <Typography
+                          sx={{ ml: 2, flex: 1 }}
+                          style={{ marginLeft: 30, color: "#e0f2f1" }}
+                          variant="h5"
+                          component="div"
+                        >
+                          Your Comments List
+                        </Typography>
+                      </Tooltip>
+                      <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleCloseUserDial}
+                        aria-label="close"
+                        style={{ marginLeft: 380 }}
+                      >
+                        <CloseIcon style={{ fontSize: 32 }} />
+                      </IconButton>
+                    </Toolbar>
+                  </AppBar>
+                  <List>
+                    <br />
+                    <Typography
+                      style={{
+                        marginLeft: 600,
+                        marginTop: 70,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Total Comments : {filteredUsers.length}
+                    </Typography>
+
+                    {filteredUsers.map((data, i) => {
+                      return (
+                        <div style={{ marginLeft: 130, marginTop: -35 }}>
+                          <Paper
+                            className={classes.paper}
+                            style={{
+                              backgroundColor: "#f0f0f0",
+                              marginTop: 80,
+                            }}
+                          >
+                            <Grid key={i} className={classes.responses}>
+                              <ListItem fullwidth>
+                                <div style={{ marginLeft: -30, fontSize: 40 }}>
+                                  <Avatar style={{ color: "#026aa4" }} />
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <ListItemText
+                                  primary={
+                                    <Typography style={{ fontWeight: "bold" }}>
+                                      {data?.userId?.firstName} &nbsp;
+                                      {data?.userId?.lastName}
+                                    </Typography>
+                                  }
+                                  secondary={
+                                    <Typography
+                                      variant="body2"
+                                      color="textPrimary"
+                                    >
+                                      Topic : {data.topic} <br />
+                                      Content : {data.content}
+                                    </Typography>
+                                  }
+                                />
+                                <Typography>
+                                  <AccessTimeIcon
+                                    style={{
+                                      width: 20,
+                                      marginTop: -25,
+                                      color: "#026aa4",
+                                      marginLeft: 13,
+                                    }}
+                                  />
+                                  <h6>
+                                    <div
+                                      style={{
+                                        marginLeft: 50,
+                                        marginTop: -25,
+                                      }}
+                                    >
+                                      {moment(data.createdAt).format(
+                                        "MMMM D, Y, HH:mm"
+                                      )}
+                                    </div>
+                                  </h6>
+                                </Typography>
+                                <Button
+                                  icon
+                                  className={classes.Delete}
+                                  onClick={(e) =>
+                                    handleDeleteComment(
+                                      data._id
+                                    ).setFilteredUsers(data, i)
+                                  }
+                                >
+                                  <DeleteIcon style={{ color: "#026aa4" }} />
+                                </Button>
+                                <Button
+                                  icon
+                                  //className={classes.Delete}
+                                  //onClick={
+                                  onClick={() => handleClickOpen(data._id)}
+                                >
+                                  <BiEdit
+                                    style={{
+                                      color: "#026aa4",
+                                      marginLeft: -220,
+                                      fontSize: 24,
+                                    }}
+                                  />
+                                </Button>
+                              </ListItem>
+                            </Grid>
+                          </Paper>
+                        </div>
+                      );
+                    })}
+                  </List>
+                </Dialog>
+              </div>
+
               {searchInput.length > 1
                 ? paginator(filteredResults, page, 2)?.data.map((data, i) => {
                     return (
@@ -761,6 +1831,7 @@ const CommentsHome = () => {
                             </ListItem>
                           </Grid>
                         </Paper>
+
                         <Tooltip
                           title={
                             <Typography style={{ fontSize: 12 }}>
@@ -992,6 +2063,7 @@ const CommentsHome = () => {
                               </ListItem>
                             </Grid>
                           </Paper>
+
                           <div>
                             <Tooltip
                               title={
