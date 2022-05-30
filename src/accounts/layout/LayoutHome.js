@@ -5,7 +5,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { Drawer, Box, Tooltip } from "@material-ui/core";
 
 import Divider from "@material-ui/core/Divider";
-import Print from "./ToolBarIcons";
+import Home from "./ToolBarIcons";
 import MenuIcon from "@material-ui/icons/Menu";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -60,10 +60,6 @@ const useStyles = makeStyles((theme) => ({
   },
   menuicon: {
     marginRight: 45,
-    //fontSize: 70,
-  },
-  icons: {
-    marginLeft: 850,
   },
 }));
 
@@ -101,20 +97,14 @@ export default function LayoutHome() {
                 aria-label="open drawer"
                 onClick={toggleDrawer(anchor, true)}
                 edge="start"
-                className={classes.menuicon}
               >
-                <MenuIcon />
+                <MenuIcon style={{ fontSize: 30, marginLeft: -15 }} />
               </IconButton>
+              <Home />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Typography variant="h6" noWrap>
                 Data Visualisation
               </Typography>
-              <div className={classes.icons}>
-                <Box sx={{ flexGrow: 0 }}>
-                  <Tooltip title="Print">
-                    <Print />
-                  </Tooltip>
-                </Box>
-              </div>
             </Toolbar>
           </AppBar>
           <SwipeableDrawer

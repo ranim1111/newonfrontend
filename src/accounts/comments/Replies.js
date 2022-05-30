@@ -20,11 +20,9 @@ export default function Replies() {
   const [text, setText] = React.useState("");
   const [userId, setUserId] = React.useState("");
   const [createdAt, setCreatedAt] = React.useState("");
-  const [commentId, setCommentId] = React.useState("");
+  //const [commentId, setCommentId] = React.useState("");
 
   const [repliesCollection, setRepliesCollection] = React.useState([]);
-
-  async function handleSubmit2(e, id) {}
 
   async function handleSubmit2(e, id) {
     e.preventDefault();
@@ -34,9 +32,8 @@ export default function Replies() {
         method: "POST",
         url: `http://localhost:8080/comments/${id}/addreply`,
         data: {
-          //donnees de la requete
           text: text,
-          userId: userId,
+          //userId: userId,
           //commentId: commentId,
           createdAt: createdAt,
         },
@@ -64,16 +61,16 @@ export default function Replies() {
       });
     }
   }
-  React.useEffect(() => {
+  /*React.useEffect((id) => {
     axios
-      .get("http://localhost:8080/comments/replies")
+      .get(`http://localhost:8080/comments/${id}/getreply`)
       .then((res) => {
         setRepliesCollection(res.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  });
+  });*/
 
   //console.log(repliesCollection);
   return (

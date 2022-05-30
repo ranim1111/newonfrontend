@@ -12,6 +12,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ReplyIcon from "@mui/icons-material/Reply";
 import CommentIcon from "@mui/icons-material/Comment";
+
 import "./comment.css";
 import {
   Typography,
@@ -203,6 +204,8 @@ const CommentsHome = () => {
   const [openYearDial, setOpenYearDial] = React.useState(false);
   const [openDayDial, setOpenDayDial] = React.useState(false);
   const [open15DaysDial, setOpen15DaysDial] = React.useState(false);
+  const [commentId, setCommentId] = React.useState("");
+  const [repliesCollection, setRepliesCollection] = React.useState([]);
 
   const handleClickOpenDateDial = (event) => {
     setAnchorEl(event.currentTarget);
@@ -480,9 +483,9 @@ const CommentsHome = () => {
     return new Date(data.createdAt).getTime() >= lastDayIn15.getTime();
   });
 
-  ////////////////////////////////////////////// 1 filter ///////////////////////////////////////
+  ////////////////////////////////////////////// last day filter ///////////////////////////////////////
   var lastDay = new Date();
-  lastDay.setDate(lastDay.getDate() - 1);
+  lastDay.setDate(lastDay.getDate() - 2);
 
   var filter6 = commentCollection.filter((data, i) => {
     return new Date(data.createdAt).getTime() >= lastDay.getTime();
@@ -551,6 +554,7 @@ const CommentsHome = () => {
       >
         <div style={{ display: "flex" }}>
           <Avatar className={classes.large} style={{ color: "#026aa4" }} />
+
           <Grid item xs={10}>
             <TextField
               name="topic"
@@ -819,20 +823,20 @@ const CommentsHome = () => {
                       alt=""
                       style={{
                         width: 190,
-                        marginTop: 100,
-                        marginLeft: 30,
+                        marginTop: 120,
+                        marginLeft: 35,
                       }}
                     />
                     <Typography
                       style={{
-                        marginLeft: 50,
+                        marginLeft: 55,
                         marginTop: 20,
                         fontWeight: "bold",
                       }}
                     >
                       Total Comments : {filter6.length}
                     </Typography>
-                    <List style={{ marginTop: -230 }}>
+                    <List style={{ marginTop: -266 }}>
                       {filter6.map((data, i) => {
                         return (
                           <div style={{ marginLeft: 220, marginTop: -35 }}>
@@ -855,7 +859,10 @@ const CommentsHome = () => {
                                   <ListItemText
                                     primary={
                                       <Typography
-                                        style={{ fontWeight: "bold" }}
+                                        style={{
+                                          fontWeight: "bold",
+                                          color: "#026aa4",
+                                        }}
                                       >
                                         {data?.userId?.firstName} &nbsp;
                                         {data?.userId?.lastName}
@@ -984,20 +991,20 @@ const CommentsHome = () => {
                       alt=""
                       style={{
                         width: 190,
-                        marginTop: 100,
-                        marginLeft: 30,
+                        marginTop: 120,
+                        marginLeft: 35,
                       }}
                     />
                     <Typography
                       style={{
-                        marginLeft: 50,
+                        marginLeft: 55,
                         marginTop: 20,
                         fontWeight: "bold",
                       }}
                     >
                       Total Comments : {filter2.length}
                     </Typography>
-                    <List style={{ marginTop: -230 }}>
+                    <List style={{ marginTop: -266 }}>
                       {filter2.map((data, i) => {
                         return (
                           <div style={{ marginLeft: 220, marginTop: -35 }}>
@@ -1020,7 +1027,10 @@ const CommentsHome = () => {
                                   <ListItemText
                                     primary={
                                       <Typography
-                                        style={{ fontWeight: "bold" }}
+                                        style={{
+                                          fontWeight: "bold",
+                                          color: "#026aa4",
+                                        }}
                                       >
                                         {data?.userId?.firstName} &nbsp;
                                         {data?.userId?.lastName}
@@ -1149,20 +1159,20 @@ const CommentsHome = () => {
                       alt=""
                       style={{
                         width: 190,
-                        marginTop: 100,
-                        marginLeft: 30,
+                        marginTop: 120,
+                        marginLeft: 35,
                       }}
                     />
                     <Typography
                       style={{
-                        marginLeft: 50,
+                        marginLeft: 55,
                         marginTop: 20,
                         fontWeight: "bold",
                       }}
                     >
                       Total Comments : {filter3.length}
                     </Typography>
-                    <List style={{ marginTop: -230 }}>
+                    <List style={{ marginTop: -266 }}>
                       {filter3.map((data, i) => {
                         return (
                           <div style={{ marginLeft: 220, marginTop: -35 }}>
@@ -1185,7 +1195,10 @@ const CommentsHome = () => {
                                   <ListItemText
                                     primary={
                                       <Typography
-                                        style={{ fontWeight: "bold" }}
+                                        style={{
+                                          fontWeight: "bold",
+                                          color: "#026aa4",
+                                        }}
                                       >
                                         {data?.userId?.firstName} &nbsp;
                                         {data?.userId?.lastName}
@@ -1314,20 +1327,20 @@ const CommentsHome = () => {
                       alt=""
                       style={{
                         width: 190,
-                        marginTop: 100,
-                        marginLeft: 30,
+                        marginTop: 120,
+                        marginLeft: 35,
                       }}
                     />
                     <Typography
                       style={{
-                        marginLeft: 50,
+                        marginLeft: 55,
                         marginTop: 20,
                         fontWeight: "bold",
                       }}
                     >
                       Total Comments : {filter4.length}
                     </Typography>
-                    <List style={{ marginTop: -230 }}>
+                    <List style={{ marginTop: -266 }}>
                       {filter4.map((data, i) => {
                         return (
                           <div style={{ marginLeft: 220, marginTop: -35 }}>
@@ -1350,7 +1363,10 @@ const CommentsHome = () => {
                                   <ListItemText
                                     primary={
                                       <Typography
-                                        style={{ fontWeight: "bold" }}
+                                        style={{
+                                          fontWeight: "bold",
+                                          color: "#026aa4",
+                                        }}
                                       >
                                         {data?.userId?.firstName} &nbsp;
                                         {data?.userId?.lastName}
@@ -1479,20 +1495,20 @@ const CommentsHome = () => {
                       alt=""
                       style={{
                         width: 190,
-                        marginTop: 100,
-                        marginLeft: 30,
+                        marginTop: 120,
+                        marginLeft: 35,
                       }}
                     />
                     <Typography
                       style={{
-                        marginLeft: 50,
+                        marginLeft: 55,
                         marginTop: 20,
                         fontWeight: "bold",
                       }}
                     >
                       Total Comments : {filter5.length}
                     </Typography>
-                    <List style={{ marginTop: -230 }}>
+                    <List style={{ marginTop: -266 }}>
                       {filter5.map((data, i) => {
                         return (
                           <div style={{ marginLeft: 220, marginTop: -35 }}>
@@ -1515,7 +1531,10 @@ const CommentsHome = () => {
                                   <ListItemText
                                     primary={
                                       <Typography
-                                        style={{ fontWeight: "bold" }}
+                                        style={{
+                                          fontWeight: "bold",
+                                          color: "#026aa4",
+                                        }}
                                       >
                                         {data?.userId?.firstName} &nbsp;
                                         {data?.userId?.lastName}
@@ -1615,12 +1634,17 @@ const CommentsHome = () => {
                 >
                   <AppBar
                     sx={{ position: "relative" }}
-                    style={{ backgroundColor: "gray" }}
+                    style={{ backgroundColor: "#d32f2f" }}
                   >
                     <Toolbar>
                       <img src="Logo.png" alt="" style={{ width: 160 }} />
                       <CommentIcon
-                        style={{ marginTop: 3, marginLeft: 370, fontSize: 27 }}
+                        style={{
+                          marginTop: 3,
+                          marginLeft: 370,
+                          fontSize: 27,
+                          color: "#026aa4",
+                        }}
                       />
                       <Tooltip
                         title={
@@ -1631,11 +1655,11 @@ const CommentsHome = () => {
                       >
                         <Typography
                           sx={{ ml: 2, flex: 1 }}
-                          style={{ marginLeft: 30, color: "#e0f2f1" }}
+                          style={{ marginLeft: 30 }}
                           variant="h5"
                           component="div"
                         >
-                          Your Comments List
+                          My Comments List
                         </Typography>
                       </Tooltip>
                       <IconButton
@@ -1649,18 +1673,23 @@ const CommentsHome = () => {
                       </IconButton>
                     </Toolbar>
                   </AppBar>
-                  <List>
-                    <br />
-                    <Typography
-                      style={{
-                        marginLeft: 600,
-                        marginTop: 70,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Total Comments : {filteredUsers.length}
-                    </Typography>
 
+                  <br />
+                  <img
+                    src="MyComment.png"
+                    alt=""
+                    style={{ width: 280, marginTop: 60 }}
+                  />
+                  <Typography
+                    style={{
+                      marginLeft: 70,
+                      marginTop: 0,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Total Comments : {filteredUsers.length}
+                  </Typography>
+                  <List style={{ marginTop: -300, marginLeft: 120 }}>
                     {filteredUsers.map((data, i) => {
                       return (
                         <div style={{ marginLeft: 130, marginTop: -35 }}>
@@ -1679,7 +1708,12 @@ const CommentsHome = () => {
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <ListItemText
                                   primary={
-                                    <Typography style={{ fontWeight: "bold" }}>
+                                    <Typography
+                                      style={{
+                                        fontWeight: "bold",
+                                        color: "#026aa4",
+                                      }}
+                                    >
                                       {data?.userId?.firstName} &nbsp;
                                       {data?.userId?.lastName}
                                     </Typography>
@@ -1899,6 +1933,8 @@ const CommentsHome = () => {
                           <Paper
                             className={classes.paper}
                             style={{ backgroundColor: "#deeaee" }}
+                            //value={commentId}
+                            //onChange={(e) => setcommentId(e.target.value)}
                           >
                             <Grid key={i} className={classes.responses}>
                               <ListItem fullwidth>
