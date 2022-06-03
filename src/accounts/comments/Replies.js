@@ -114,7 +114,7 @@ export default function Replies() {
                 borderRadius: "15px",
               }}
             >
-              <Grid key={i}>
+              {/*<Grid key={i}>
                 <ListItem
                   fullwidth
                   style={{ marginLeft: 50, marginBottom: 15 }}
@@ -153,7 +153,7 @@ export default function Replies() {
                     </h6>
                   </Typography>
                 </ListItem>
-              </Grid>
+              </Grid>*/}
             </Paper>
           </React.Fragment>
         );

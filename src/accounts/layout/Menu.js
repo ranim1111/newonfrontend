@@ -436,7 +436,9 @@ export default function Menu2() {
             </Tooltip>
             <Tooltip
               title={
-                <Typography style={{ fontSize: 15 }}>Edit Profile</Typography>
+                <Typography style={{ fontSize: 15 }}>
+                  Change Password
+                </Typography>
               }
             >
               <ListItem button component={Link} to={"/ChangePassword"}>

@@ -6,7 +6,7 @@ export const getUserSimpleFiles = async (userId) => {
   try {
     const response = await axios({
       method: "get",
-      url: `/uploads/files/getall/627abe2c5a6be5db4943d47b`,
+      url: `/uploads/files/getall/629750babcaf323eedd7a893`,
     });
     return { success: true, data: response.data };
   } catch (error) {

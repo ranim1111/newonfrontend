@@ -9,10 +9,12 @@ import axios from "axios"; //pour l'envoie des requetes
 import EditIcon from "@mui/icons-material/Edit";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import ReplyIcon from "@mui/icons-material/Reply";
 import CommentIcon from "@mui/icons-material/Comment";
-
+import SortIcon from "@mui/icons-material/Sort";
 import "./comment.css";
 import {
   Typography,
@@ -206,6 +208,122 @@ const CommentsHome = () => {
   const [open15DaysDial, setOpen15DaysDial] = React.useState(false);
   const [commentId, setCommentId] = React.useState("");
   const [repliesCollection, setRepliesCollection] = React.useState([]);
+  const [likesCollection, setLikesCollection] = React.useState([]);
+  const [Likes, setLikes] = React.useState(0);
+  const [Dislikes, setDislikes] = React.useState(0);
+  const [LikeAction, setLikeAction] = React.useState(null);
+  const [DislikeAction, setDislikeAction] = React.useState(null);
+  const [disliked, setDisliked] = React.useState(false);
+
+  const handleLikes = (id, userId) => {
+    if (LikeAction == null) {
+      axios
+        .post(`http://localhost:8080/comments/${id}/addlike`)
+        .then((res) => {
+          console.log(res.data);
+          setLikes(Likes + 1);
+          setLikeAction("liked");
+          console.log(LikeAction);
+          console.log(Likes);
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 1300,
+          });
+
+          Toast.fire({
+            customClass: {
+              container: "myswal",
+            },
+            icon: "info",
+            title: res.data,
+          });
+        })
+        .catch((err) => console.log(err));
+    } else {
+      axios
+        .post(`http://localhost:8080/comments/${id}/unlike`)
+        .then((res) => {
+          console.log(res.data);
+
+          setLikes(Likes - 1);
+          setLikeAction(null);
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 1300,
+          });
+
+          Toast.fire({
+            customClass: {
+              container: "myswal",
+            },
+            icon: "info",
+            title: "You unliked this comment.",
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleDislikes = (id) => {
+    if (DislikeAction == null) {
+      axios
+        .post(`http://localhost:8080/comments/${id}/adddislike`)
+        .then((res) => {
+          console.log(res.data);
+          setDislikes(Dislikes + 1);
+          setDislikeAction("disliked");
+          console.log(DislikeAction);
+          console.log(Dislikes);
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 1300,
+          });
+
+          Toast.fire({
+            customClass: {
+              container: "myswal",
+            },
+            icon: "info",
+            title: res.data,
+          });
+        })
+        .catch((err) => console.log(err));
+    } else {
+      axios
+        .post(`http://localhost:8080/comments/${id}/undislike`)
+        .then((res) => {
+          console.log(res.data);
+
+          setDislikes(Dislikes - 1);
+          setDislikeAction(null);
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 1300,
+          });
+
+          Toast.fire({
+            customClass: {
+              container: "myswal",
+            },
+            icon: "info",
+            title: "You undisliked this comment.",
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   const handleClickOpenDateDial = (event) => {
     setAnchorEl(event.currentTarget);
@@ -259,7 +377,7 @@ const CommentsHome = () => {
 
   const getCommentByUser = async (userId) => {
     axios
-      .get(`http://localhost:8080/comments/getCommentByUser/${userId}`)
+      .get(`http://localhost:8080/comments/getCommentByUser/:userId?`)
       .then((res) => {
         setFilteredUsers(res.data.reverse());
 
@@ -281,6 +399,7 @@ const CommentsHome = () => {
   const handleChange = (event, value) => {
     setPage(paginator(commentCollection, value, 1).page);
   };
+
   React.useEffect(() => {
     axios
       .get("http://localhost:8080/comments/getcomment")
@@ -405,8 +524,8 @@ const CommentsHome = () => {
       console.log(error);
     }
   };
-  const handleUpdateComment = async (e, id) => {
-    e.preventDefault();
+  const handleUpdateComment = async (id) => {
+    //e.preventDefault();
     try {
       const response = await axios({
         method: "put",
@@ -511,8 +630,11 @@ const CommentsHome = () => {
     }
   };
 
-  const handleClickReply = () => {
-    setOpenReply(!openReply);
+  const handleClickReply = (id) => {
+    if (id) {
+      setOpenReply(!openReply);
+      console.log(id);
+    }
   };
   const handleTotalUser = (id) => {
     getCommentByUser(id);
@@ -1903,25 +2025,6 @@ const CommentsHome = () => {
                             />
                           </Button>
                         </Tooltip>
-                        <Tooltip
-                          title={
-                            <Typography style={{ fontSize: 12 }}>
-                              Reply
-                            </Typography>
-                          }
-                        >
-                          <Button icon>
-                            <ReplyIcon
-                              style={{
-                                color: "#4169E1",
-                                marginTop: 45,
-                                marginLeft: 33,
-
-                                fontSize: 25,
-                              }}
-                            />
-                          </Button>
-                        </Tooltip>
                       </React.Fragment>
                     );
                   })
@@ -2108,17 +2211,45 @@ const CommentsHome = () => {
                                 </Typography>
                               }
                             >
-                              <Button icon>
-                                <ThumbUpIcon
+                              <Button
+                                icon
+                                onClick={() => {
+                                  handleLikes(data._id);
+                                }}
+                              >
+                                {LikeAction === "liked" ? (
+                                  <ThumbUpIcon
+                                    style={{
+                                      color: "009933",
+                                      marginTop: 45,
+                                      marginLeft: 80,
+                                      fontSize: 22,
+                                    }}
+                                  />
+                                ) : (
+                                  <ThumbUpOutlinedIcon
+                                    style={{
+                                      color: "009933",
+                                      marginTop: 45,
+                                      marginLeft: 80,
+                                      fontSize: 22,
+                                    }}
+                                  />
+                                )}
+                                {/*<ThumbUpOutlinedIcon
+                                  onClick={() => {
+                                    handleLikes(data._id);
+                                  }}
                                   style={{
                                     color: "009933",
                                     marginTop: 45,
                                     marginLeft: 80,
                                     fontSize: 22,
                                   }}
-                                />
+                                />*/}
                               </Button>
                             </Tooltip>
+
                             <Tooltip
                               title={
                                 <Typography style={{ fontSize: 12 }}>
@@ -2127,15 +2258,30 @@ const CommentsHome = () => {
                               }
                             >
                               <Button icon>
-                                <ThumbDownAltIcon
-                                  style={{
-                                    color: "e22400",
-                                    marginTop: 45,
-                                    marginLeft: 50,
+                                {disliked ? (
+                                  <ThumbDownAltIcon
+                                    style={{
+                                      color: "e22400",
+                                      marginTop: 45,
+                                      marginLeft: 50,
 
-                                    fontSize: 22,
-                                  }}
-                                />
+                                      fontSize: 22,
+                                    }}
+                                  />
+                                ) : (
+                                  <ThumbDownAltOutlinedIcon
+                                    onClick={() => {
+                                      handleDislikes(data._id);
+                                    }}
+                                    style={{
+                                      color: "e22400",
+                                      marginTop: 45,
+                                      marginLeft: 50,
+
+                                      fontSize: 22,
+                                    }}
+                                  />
+                                )}
                               </Button>
                             </Tooltip>
                             <Tooltip
@@ -2147,7 +2293,7 @@ const CommentsHome = () => {
                             >
                               <Button icon>
                                 <ReplyIcon
-                                  onClick={handleClickReply}
+                                  onClick={() => handleClickReply(data._id)}
                                   style={{
                                     color: "#4169E1",
                                     marginTop: 45,
